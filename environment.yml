@@ -1,0 +1,12 @@
+# Use this file to set up a conda environment for the project.
+# $ conda env create -f environment.yml
+name: dash_chatgpt
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11.4
+  - dash=2.10.2
+  - dash-bootstrap-components=1.4.1     # bootstrap components for dash
+  - pytest=7.3.2                        # unit tests
+  - gunicorn=20.1.0                     # web server for the dash app
+  - black=23.3.0                        # automated code formatting
