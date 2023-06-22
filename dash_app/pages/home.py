@@ -6,14 +6,12 @@ from dash import Input, Output, State, html, callback
 import dash_bootstrap_components as dbc
 # chat-gpt API
 import openai
-import os
 
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv())
-
+#as for now, we can use the API key of a friend but we should get our own eventually
 openai.api_key  = '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'
 
 # creates chatGPT response
+# input: prompt, output: response
 def get_completion(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
