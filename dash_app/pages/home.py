@@ -4,6 +4,24 @@
 import dash
 from dash import Input, Output, State, html, callback
 import dash_bootstrap_components as dbc
+# chat-gpt API
+import openai
+import os
+
+from dotenv import load_dotenv, find_dotenv
+_ = load_dotenv(find_dotenv())
+
+openai.api_key  = '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'
+
+# creates chatGPT response
+def get_completion(prompt, model="gpt-3.5-turbo"):
+    messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0, # this is the degree of randomness of the model's output
+    )
+    return response.choices[0].message["content"]
 
 
 dash.register_page(__name__, path="/")
@@ -67,6 +85,14 @@ def process_text(n_clicks, input_text):
     # TODO: make some machine learning magic here
     print("callback fired...")
     # create output - e.g. analysis results or modified input text
-    output_text = str(input_text).upper()
+    #output_text = str(input_text).upper()
+
+    # what do we want chatGPT to do?
+    prompt = f"""
+    Write the text delimited by triple backticks \
+    in form of a russian propaganda breaking news.
+    ```{input_text}```
+    """
+    output_text = get_completion(prompt)
 
     return output_text
