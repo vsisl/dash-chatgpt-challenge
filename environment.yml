@@ -10,3 +10,5 @@ dependencies:
   - pytest=7.3.2                        # unit tests
   - gunicorn=20.1.0                     # web server for the dash app
   - black=23.3.0                        # automated code formatting
+  - openai=0.27.8                       # chatGPT API
+  - nltk=3.8.1                          # natural language processing
