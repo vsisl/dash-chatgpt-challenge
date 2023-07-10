@@ -2,7 +2,7 @@
 """
 
 import dash
-from dash import Input, Output, State, html, callback
+from dash import Input, Output, State, html, callback, dcc
 import dash_bootstrap_components as dbc
 from dash_app.utilities import get_completion
 
@@ -34,9 +34,15 @@ column_input = dbc.Col(
 # column - analysis results
 column_output = dbc.Col(
     [
-        dbc.Container(
-            id="container-analysis_results",
-            children="PLACEHOLDER: analysis results with appear here...",
+        dcc.Loading(
+            type="default",
+            parent_className="loading_wrapper",  # to apply custom CSS
+            children=[
+                dbc.Container(
+                    id="container-analysis_results",
+                    children="PLACEHOLDER: analysis results with appear here...",
+                )
+            ],
         )
     ],
     width=6,

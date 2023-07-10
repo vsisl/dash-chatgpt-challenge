@@ -3,7 +3,7 @@ Utilities & other helper functions.
 """
 import openai  # chat-gpt API
 
-openai.api_key = ""
+openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
 
 
 def get_completion(prompt, model="gpt-3.5-turbo"):

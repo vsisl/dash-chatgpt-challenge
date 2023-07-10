@@ -4,7 +4,7 @@ name: dash_chatgpt
 channels:
   - conda-forge
 dependencies:
-  - python=3.11.4
+  - python=3.10.12
   - dash=2.10.2
   - dash-bootstrap-components=1.4.1     # bootstrap components for dash
   - pytest=7.3.2                        # unit tests
