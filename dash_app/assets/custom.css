@@ -3,3 +3,13 @@
 .loading_wrapper > div {
     visibility: visible !important;
 }
+
+.hover-box:hover {
+    background-color: #ffd77d;
+    color: black;
+    font-weight: normal;
+}
+
+.hover-text:hover {
+    font-weight: 850;
+}
