@@ -85,6 +85,7 @@ def classify_sentences(sentences):
     return ary
 
 
+# corresponding style "hover-box" located in assets/custom.css
 def style_name(name):
     return html.Span(name, style={
         "font-size": "0.8em",
@@ -97,6 +98,7 @@ def style_name(name):
     }, className="hover-box")
 
 
+# corresponding style "hover-text" located in assets/custom.css
 def style_box(children, title, idx):
     return html.Mark(children, id={'type': 'mark', 'index': idx}, title=title, style={
         "padding": "0.45em 0.6em",

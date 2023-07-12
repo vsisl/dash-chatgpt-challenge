@@ -57,7 +57,8 @@ def process_text(n_clicks, input_text):
         {'opacity': 1, 'visibility': 'visible', 'transition': 'opacity 2.0s ease'}
 
 
-# Callback to change the content of the other container
+# callback to update info about which highlighted sentence was selected - the definition of the mark component is
+#  located in generalutils.py, in the style_box() function
 @callback(
     Output(component_id="container-sentence_info", component_property="children"),
     Input({'type': 'mark', 'index': ALL}, 'n_clicks'),
