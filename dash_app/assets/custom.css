@@ -3,3 +3,15 @@
 .loading_wrapper > div {
     visibility: visible !important;
 }
+
+/*used for the styling of the boxes around highlighted text after the techniques analysis*/
+.hover-box:hover {
+    background-color: #ffd77d;
+    color: black;
+    font-weight: normal;
+}
+
+/*used for the styling of the abbreviations in the highlighted boxes displayed after the techniques analysis*/
+.hover-text:hover {
+    font-weight: 850;
+}
