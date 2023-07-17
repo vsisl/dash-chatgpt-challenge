@@ -53,14 +53,15 @@ def get_classification(input_text, model="text-davinci-003"):
         Words or phrases that discourage critical thought and meaningful discussion about a given topic. They are \
         typically short, generic sentences that offer seemingly simple answers to complex questions or that distract \
         attention away from other lines of thought. 'Whataboutism or Straw Man or Red Herring'- A technique that \
-        attempts to discredit an opponent\'s position by charging them with hypocrisy without directly disproving \
-        their argument, when an opponent\'s proposition is substituted with a similar one which is then refuted in \
+        attempts to discredit an opponent's position by charging them with hypocrisy without directly disproving \
+        their argument, when an opponent's proposition is substituted with a similar one which is then refuted in \
         place of the original proposition or introducing irrelevant material to the issue being discussed, so that \
-        everyone\'s attention is diverted away from the points made.In the following text presented after the \
+        everyone's attention is diverted away from the points made.In the following text presented after the \
         word 'Text' identify which of these techniques are present, it can be multiple or none. Enclose the found \
         techniques in square brackets imitating input for Python list consisting of strings. Separate the techniques \
         with a comma, put parantheses around each found technique, e.g. ['Flag-Waving',  'Loaded Language'] or None if \
-        no technique is found.Text: {input_text}\n" + "\n\n###\n\n",
+        no technique is found.Text: {input_text}\n"
+        + "\n\n###\n\n",
         temperature=0,
         max_tokens=35,
         top_p=1,

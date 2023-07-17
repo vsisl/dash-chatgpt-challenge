@@ -11,7 +11,55 @@
     font-weight: normal;
 }
 
+/* for styling of the box containing the analyzed paragraph */
+.analysis_results-container {
+    margin:15px;
+    padding: 20px;
+    border: 1px solid #e1dbdb;
+    border-radius: 6px;
+    background-color: white;
+    line-height: 1.8;
+    text-align: justify;
+    transition: box-shadow 0.7s ease-in-out;
+}
+
+/* just for a little shadow when hovering over results*/
+.analysis_results-container:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* for styling of the box containing analysis of the sentences */
+.sentence_info-container {
+    margin:15px;
+    padding: 20px;
+    border: 1px solid #e1dbdb;
+    border-radius: 6px;
+    background-color: white;
+    line-height: 1.8;
+    transition: box-shadow 0.7s ease-in-out;
+}
+
+/* just for a little shadow when hovering over results*/
+.sentence_info-container:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
 /*used for the styling of the abbreviations in the highlighted boxes displayed after the techniques analysis*/
 .hover-text:hover {
     font-weight: 850;
+}
+
+/* custom loading - .gif with putin located in /assets */
+.dash-spinner {
+  background-image: url('putin-loader.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 40vh !important;
+  width: 20vh !important;
+  margin-top: 27vh !important;
+}
+
+.dash-spinner * {
+  display: none !important;
 }
