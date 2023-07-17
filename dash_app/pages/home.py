@@ -18,9 +18,12 @@ layout = dmc.Grid([
     dmc.Col(
         span=12,
         children=[
+            dmc.Space(h=50),
             dmc.Center([
-                dmc.Title(children='PropagandaBot', order=1),   # H1 title equivalent
-            ])
+                # TODO: replace this logo with different one, use the vectorized version of the logo (available)
+                dmc.Image(src=r'/assets/putin.png', alt='PropagandaBot', style={'width': '375px'}),
+            ]),
+            dmc.Space(h=30),
         ],
     ),
 
@@ -32,12 +35,6 @@ layout = dmc.Grid([
                     children=[
                         dmc.Card(
                             children=[
-                                # dmc.CardSection(
-                                #     dmc.Image(
-                                #         src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80",
-                                #         height=160,
-                                #     )
-                                # ),
                                 dmc.Group(
                                     [
                                         dmc.Text("Analyse", weight=500),
