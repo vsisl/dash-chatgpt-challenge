@@ -134,8 +134,8 @@ def classify_sentences_christian(sentences,n_sentences=3):
         n_tokens += tokens
         #import pdb; pdb.set_trace()
         what = ast.literal_eval(output)
-        #import pdb; pdb.set_trace()
-        #print(what)
+        import pdb; pdb.set_trace()
+        #print(what)s
         #import pdb; pdb.set_trace()
         #fill_out_dictionary(out_dict[i],what)
         #import pdb; pdb.set_trace()

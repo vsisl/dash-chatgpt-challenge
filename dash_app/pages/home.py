@@ -52,6 +52,7 @@ def process_text(n_clicks, input_text):
 
     classified_sentences, ranking, n_tokens = classify_sentences(sentences)
     n_tokens += output_tokens
+
     import pdb; pdb.set_trace()
     #classified_sentences = classify_sentences_christian(sentences)
 

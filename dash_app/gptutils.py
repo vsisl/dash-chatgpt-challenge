@@ -176,7 +176,7 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo",advanced=False):
 
         response = response.choices[0].message["content"]
 
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
 
     return response, used_tokens
 
