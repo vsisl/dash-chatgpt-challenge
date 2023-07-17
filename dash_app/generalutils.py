@@ -125,12 +125,15 @@ def classify_sentences_christian(sentences,n_sentences=3):
     #out_dict = dict(list(enumerate(sentences))) #create a dic with keys = sentences
     confidence_ranking = np.zeros(len(sentences))
     # Iterate through the sentences and assign numbers
+    n_tokens = 0
     for i, sent in enumerate(sentences):
         print('i=',i)
         #print('sentence',sentence)
         out_dict[str(i)]['sentence'] = sent
+        output, tokens = get_classification_cheaper(sent)
+        n_tokens += tokens
         #import pdb; pdb.set_trace()
-        what = ast.literal_eval(get_classification_cheaper(sent))
+        what = ast.literal_eval(output)
         #import pdb; pdb.set_trace()
         #print(what)
         #import pdb; pdb.set_trace()
@@ -152,8 +155,8 @@ def classify_sentences_christian(sentences,n_sentences=3):
 
    # import pdb; pdb.set_trace()
     best = np.argsort(confidence_ranking)
-    import pdb; pdb.set_trace()
-    return out_dict, np.argsort(confidence_ranking)
+    #import pdb; pdb.set_trace()
+    return out_dict, np.argsort(confidence_ranking), n_tokens
 
 
 # corresponding style "hover-box" located in assets/custom.css

@@ -20,7 +20,7 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
         max_tokens=300,
         temperature=0.3,  # this is the degree of randomness of the model's output, bigger number = greater 'creativity'
     )
-    return response.choices[0].message["content"]
+    return response.choices[0].message["content"], response['usage']['total_tokens']
 
 
 def get_classification(input_text, model="text-davinci-003"):
@@ -72,15 +72,16 @@ def get_classification(input_text, model="text-davinci-003"):
     return response["choices"][0]["text"]
 
 
-def get_classification_cheaper(prompt, model="gpt-3.5-turbo"):
+def get_classification_cheaper(prompt, model="gpt-3.5-turbo",advanced=False):
     """Creates chatGPT response
 
     :param prompt: str
     :param model: str; optional, default: "gpt-3.5-turbo"
+    :param advanced: if using Jan's classification method
     :return: str: response
     """
-    true = False
-    if true:
+
+    if advanced:
         messages = [
         {
             "role": "system",
@@ -146,10 +147,12 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo"):
                    messages=messages,
                    temperature=0,  # this is the degree of randomness of the model's output
                  )
-        response_buras = response.choices[0].message["content"]
 
+        used_tokens = response['usage']['total_tokens']
+        response = response.choices[0].message["content"]
 
-    prompt_christian = f""" classify the sentence delimited by triple backticks into the following list of classes:
+    else:
+        prompt = f""" classify the sentence delimited by triple backticks into the following list of classes:
                      ‘Appeal to Authority’, ‘Appeal to Fear Prejudice’,‘Bandwagon, Reductio ad hitlerum’,' Black and White Fallacy’, \
                      ‘Causal Oversimplification’, ‘Doubt’, ‘Exaggeration, Minimisation’, ‘Flag-Waving’, ‘Loaded Languag’, \
                      ‘Name Calling, Labeling’, ‘Repetition’, ‘Slogans’, ‘Thought-terminating Cliches’, \
@@ -159,26 +162,22 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo"):
                      1. 'classes' where all the classes are saved as an array
                      2. 'confidence' where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. The 'None' \
                         the 'None' class should be assign a 0 by default.
-                     3. 'explain' where an explaination is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise.
+                     3. 'explain' where an explaination is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
                       ```{prompt}````
            """
+        message = [  {"role": "user", "content": prompt} ]
 
-   # Only give me an array of the classes which fit to the sentence. Just the description not the numbers. Seperate two classes with a comma.
-
-
-
-    message_christian = [  {"role": "user", "content": prompt_christian} ]
-
-    response_christian = openai.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
         model=model,
-        messages=message_christian,
+        messages=message,
         temperature=0,  # this is the degree of randomness of the model's output
-    )
+        )
+        used_tokens = response['usage']['total_tokens']
 
-   
-    response_christian = response_christian.choices[0].message["content"]
+        response = response.choices[0].message["content"]
 
-    #import pdb; pdb.set_trace()
-    return response_christian
+        import pdb; pdb.set_trace()
+
+    return response, used_tokens
 
 #response.choices[0].message["content"]
