@@ -1,0 +1,13 @@
+sentence,classes,confidence,explain
+BREAKING NEWS: Russian Propaganda Exposed!,,,
+"In a shocking revelation, evidence has emerged exposing Russia's manipulation tactics.",['Appeal to Fear Prejudice'],[1],"['The sentence uses loaded language (""shocking revelation"", ""manipulation tactics"") to create fear and prejudice against Russia.']"
+"The number ""321"" has been identified as a secret code used by the Russian government to spread propaganda.",,,
+"This code is believed to be embedded in various online platforms, subtly influencing public opinion.",,,
+"Experts suggest that the number ""321"" is strategically placed to create a sense of urgency and manipulate emotions.","['Appeal to Authority', 'Exaggeration, Minimisation']","[0.8, 0.6]","['The sentence appeals to authority by mentioning ""experts"" suggesting something.', 'The sentence uses exaggeration by stating that the number ""321"" is strategically placed to manipulate emotions.']"
+"It is suspected that this code has been used to sway public sentiment during critical events, such as elections and geopolitical conflicts.",,,
+The international community is now calling for an immediate investigation into Russia's propaganda activities.,['Appeal to Authority'],[1],"['The sentence mentions the international community, which implies that there is a higher authority supporting the claim.']"
+Governments worldwide are urged to strengthen their cybersecurity measures to counter this covert manipulation.,,,
+Citizens are advised to remain vigilant and question the information they encounter online.,['Doubt'],[1],"['The sentence encourages citizens to question the information they encounter online, indicating doubt.']"
+It is crucial to rely on credible sources and fact-check before forming opinions.,['Appeal to Authority'],[1],"['The sentence emphasizes the importance of relying on credible sources and fact-checking, which is a characteristic of the Appeal to Authority fallacy.']"
+"Russia's propaganda machine has been exposed, and the world must unite to combat this threat to democracy and truth.",,,
+Stay tuned for further updates on this developing story.,,,
