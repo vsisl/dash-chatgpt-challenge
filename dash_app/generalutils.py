@@ -4,10 +4,11 @@ Utilities & other helper functions.
 import re
 import ast
 import numpy as np
+import pandas as pd
 from dash import html
 from gptutils import get_completion, get_classification, get_classification_cheaper
 
-# TODO: probably remove this - my initial thought was to use different colors for differen techniques, but generally
+# TODO: probably remove this - my initial thought was to use different colors for different techniques, but generally
 #       there are multiple techniques present in a sentence
 DEFAULT_LABEL_COLORS = {
     "AtA": "#7aecec",
@@ -31,11 +32,11 @@ DEFAULT_LABEL_COLORS = {
 term_to_abbreviation = {
     'Appeal to Authority': 'AtA',
     'Appeal to Fear Prejudice': 'AtFP',
-    'Bandwagon or Reductio ad hitlerum': 'BoRaH',
+    'Bandwagon, Reductio ad hitlerum': 'BoRaH',
     'Black and White Fallacy': 'BaWF',
     'Causal Oversimplification': 'CO',
     'Doubt': 'D',
-    'Exaggeration or Minimisation': 'EoM',
+    'Exaggeration, Minimisation': 'EoM',
     'Flag-Waving': 'FW',
     'Loaded Language': 'LL',
     'Name Calling or Labeling': 'NCoL',
@@ -137,5 +138,24 @@ def render(length, ary):
             # children.append(entity(ary[i][0], term_to_abbreviation[labels[0]], idx))
             children.append(entity(ary[i][0], labels, idx))
             idx += 1
+
+    return children
+
+
+# TODO: make this the only render function
+# TODO: change this to work with dictionaries, NOT PANDAS DATAFRAME!!
+# used in the analysis part to generate highlighted and not highlighted text
+def render_new_dataformat(df):
+    children = []
+    idx = 0
+    for i, row in df.iterrows():
+        if pd.isna(row['classes']):
+            children.append(row['sentence'])
+        else:
+            labels = ast.literal_eval(row['classes'])
+            children.append(entity(row['sentence'], labels, idx))
+            idx += 1
+
+    print(children)
 
     return children
