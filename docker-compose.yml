@@ -1,0 +1,45 @@
+# From this file's parent directory, execute:
+# $ docker compose -f docker-compose.yml build --no-cache
+# to build container images, and
+# $ docker compose -f docker-compose.yml up
+# to create and run the containers.
+
+# NOTE: It is possible to omit the build command and proceed with $ docker compose up. The image will be built
+#  automatically, however this doesn't allow for specifying the --no-cache flag.
+
+version: '3.4'
+
+networks:
+  dash_chatgpt-network:
+
+services:
+  # database serving as cache for callbacks
+  redis:
+    container_name: dash_chatgpt_challenge-redis
+    image: redis
+    networks:
+      - dash_chatgpt-network
+    restart: unless-stopped
+
+  # plotly dash app
+  dash_app:
+    container_name: dash_chatgpt_challenge-dash_app
+    image: vsisl/dash_chatgpt_challenge:test
+    build:
+      context: .
+      dockerfile: dash_app/Dockerfile
+    networks:
+      - dash_chatgpt-network
+    ports:
+      - 5000:80                         # specify the port for the Dashboard
+    environment:
+      - PYTHONUNBUFFERED=1                  # in order to get python prints into the container's log file
+      - REDISTOGO_URL=redis://redis:6379    # to connect with redis
+    depends_on:
+      - redis
+    logging:
+      driver: json-file
+      options:
+        max-file: '10'
+        max-size: '200k'
+    restart: unless-stopped

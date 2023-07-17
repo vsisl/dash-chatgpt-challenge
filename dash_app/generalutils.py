@@ -6,7 +6,7 @@ import ast
 import numpy as np
 import pandas as pd
 from dash import html
-from gptutils import get_completion, get_classification, get_classification_cheaper
+from dash_app.gptutils import get_completion, get_classification, get_classification_cheaper
 
 # TODO: probably remove this - my initial thought was to use different colors for different techniques, but generally
 #       there are multiple techniques present in a sentence
