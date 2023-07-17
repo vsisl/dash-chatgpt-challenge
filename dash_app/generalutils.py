@@ -69,20 +69,23 @@ def extract_sentences(text):
     return sentences
 
 
-def classify_sentences(sentences):
-    # Create an empty ndarray to store the sentences and their numbers
-    ary = np.empty((len(sentences), 2), dtype=object)
-
-    # Iterate through the sentences and assign numbers
-    for i, sentence in enumerate(sentences):
-        what = ast.literal_eval(get_classification_cheaper(sentence))
-        print(what)
-        ary[i][0] = sentence
-        # ary[i][1] = ast.literal_eval(get_classification(sentence))
-        ary[i][1] = what
-        print(ary[i][0], ary[i][1])
-
-    return ary
+# former classfier from Jan
+##########################################################################
+# def classify_sentences(sentences):                                     #
+#     # Create an empty ndarray to store the sentences and their numbers #
+#     ary = np.empty((len(sentences), 2), dtype=object)                  #
+#                                                                        #
+#     # Iterate through the sentences and assign numbers                 #
+#     for i, sentence in enumerate(sentences):                           #
+#         what = ast.literal_eval(get_classification_cheaper(sentence))  #
+#         print(what)                                                    #
+#         ary[i][0] = sentence                                           #
+#         # ary[i][1] = ast.literal_eval(get_classification(sentence))   #
+#         ary[i][1] = what                                               #
+#         print(ary[i][0], ary[i][1])                                    #
+#                                                                        #
+#     return ary                                                         #
+##########################################################################
 
 # credits to Bard
 def fill_out_dictionary(dictionary, other_dictionary):
@@ -97,7 +100,7 @@ def fill_out_dictionary(dictionary, other_dictionary):
   """
 
   for key, value in other_dictionary.items():
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
     if key in dictionary:
       dictionary[key] = value
     else:
@@ -109,7 +112,7 @@ def fill_out_dictionary(dictionary, other_dictionary):
   return dictionary
 
 
-def classify_sentences_christian(sentences,n_sentences=3):
+def classify_sentences(sentences,n_sentences=3):
     # Create an empty ndarray to store the sentences and their numbers
     ary = np.empty((len(sentences), 2), dtype=object)
 
@@ -127,14 +130,14 @@ def classify_sentences_christian(sentences,n_sentences=3):
     # Iterate through the sentences and assign numbers
     n_tokens = 0
     for i, sent in enumerate(sentences):
-        print('i=',i)
+        # print('i=',i)
         #print('sentence',sentence)
         out_dict[str(i)]['sentence'] = sent
         output, tokens = get_classification_cheaper(sent)
         n_tokens += tokens
         #import pdb; pdb.set_trace()
         what = ast.literal_eval(output)
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         #print(what)s
         #import pdb; pdb.set_trace()
         #fill_out_dictionary(out_dict[i],what)
@@ -156,7 +159,7 @@ def classify_sentences_christian(sentences,n_sentences=3):
    # import pdb; pdb.set_trace()
     best = np.argsort(confidence_ranking)
     #import pdb; pdb.set_trace()
-    return out_dict, np.argsort(confidence_ranking), n_tokens
+    return out_dict, best, n_tokens
 
 
 # corresponding style "hover-box" located in assets/custom.css

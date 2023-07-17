@@ -51,9 +51,10 @@ def process_text(n_clicks, input_text):
     #print(output_text)
 
     classified_sentences, ranking, n_tokens = classify_sentences(sentences)
+    # caution: ranking starts with the lowest
     n_tokens += output_tokens
 
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
     #classified_sentences = classify_sentences_christian(sentences)
 
     output_children = render(len(sentences), classified_sentences)
