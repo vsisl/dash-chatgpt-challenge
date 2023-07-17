@@ -46,13 +46,13 @@ style = {
     "height": 100,
     "marginBottom": 20,
     "padding": 10,
-    'display': 'flex',
+    "display": "flex",
 }
 
 # title of the analysis part of the project
 title = dmc.Center(
     children=[
-        dmc.Space(h='xl'),
+        dmc.Space(h="xl"),
         html.H1(
             children=[
                 "Analyze a text with ",
@@ -68,11 +68,12 @@ title = dmc.Center(
                 ),
             ],
             style={"display": "inline-block"},
-        )],
+        ),
+    ],
     style={
         "marginTop": 70,
         "marginBottom": 20,
-        'display': 'flex',
+        "display": "flex",
     },
 )
 
@@ -86,15 +87,15 @@ column_input_analyse = dmc.Center(
                 dmc.Group(
                     children=[
                         dbc.Textarea(
-                                    id="input-text_to_analyze",
-                                    placeholder="Type or paste text here...",
-                                    style={"width": 550},
-                                ),
+                            id="input-text_to_analyze",
+                            placeholder="Type or paste text here...",
+                            style={"width": 550},
+                        ),
                         dmc.Button(
                             "Submit Text",
                             id="button-submit-original",
                             color="red",
-                            style={"height": 66}
+                            style={"height": 66},
                         ),
                         dmc.Text(
                             "or",
@@ -104,77 +105,75 @@ column_input_analyse = dmc.Center(
                             "Try Example",
                             id="button-try-example",
                             color="blue",
-                            style={"height": 66}
+                            style={"height": 66},
                         ),
                     ]
                 )
-            ]
+            ],
         )
     ],
 )
 
 
 container_analysis_results = dcc.Loading(
-            type="default",
-            parent_className="loading_wrapper",  # to apply custom CSS
+    type="default",
+    parent_className="loading_wrapper",  # to apply custom CSS
+    children=[
+        dmc.Grid(
+            id="container-all_analysis",
+            gutter="xl",
+            style={"opacity": 0, "visibility": "hidden", "min-height": 100},
             children=[
-                dmc.Grid(
-                    id="container-all_analysis",
-                    gutter="xl",
-                    style={'opacity': 0, 'visibility': 'hidden', "min-height": 100},
+                dmc.Col(
+                    id="analysis_results-container",
+                    className="analysis_results-container",
+                    span=7,
+                    children="PLACEHOLDER",
+                ),
+                dmc.Col(
+                    span=4,
+                    offset=0.2,
+                    className="sentence_info-container",  # the same style as above column
                     children=[
-                        dmc.Col(
-                            id="analysis_results-container",
-                            className="analysis_results-container",
-                            span=7,
-                            children="PLACEHOLDER",
-                        ),
-                        dmc.Col(
-                            span=4,
-                            offset=0.2,
-                            className="sentence_info-container",  # the same style as above column
-                            children=[
-                                dmc.Group(
-                                    [
-                                        dmc.Text("Found techniques", weight=900),
-                                        dmc.Badge("PLACEHOLDER", color="red", variant="light"),
-                                    ],
-                                    position="apart",
-                                ),
-                                dmc.Text(
-                                    children="",
-                                    id='found-techniques',
-                                    className="sentence_info-container",
-                                ),
-                                dmc.Group(
-                                    [
-                                        dmc.Text("Explanation", weight=900),
-                                        dmc.Badge("PLACEHOLDER", color="red", variant="light"),
-                                    ],
-                                    position="apart",
-                                ),
-                                dmc.Text(
-                                    children="",
-                                    id='explanation',
-                                    className="sentence_info-container",
-                                ),
-
+                        dmc.Group(
+                            [
+                                dmc.Text("Found techniques", weight=900),
+                                dmc.Badge("PLACEHOLDER", color="red", variant="light"),
                             ],
-                        )
+                            position="apart",
+                        ),
+                        dmc.Text(
+                            children="",
+                            id="found-techniques",
+                            className="sentence_info-container",
+                        ),
+                        dmc.Group(
+                            [
+                                dmc.Text("Explanation", weight=900),
+                                dmc.Badge("PLACEHOLDER", color="red", variant="light"),
+                            ],
+                            position="apart",
+                        ),
+                        dmc.Text(
+                            children="",
+                            id="explanation",
+                            className="sentence_info-container",
+                        ),
                     ],
-                )
-            ]
+                ),
+            ],
+        )
+    ],
 )
 
 # column - information about the sentences
 column_sentence_info = dbc.Col(
     [
-                dbc.Container(
-                    id="container-sentence_info",
-                    children="PLACEHOLDER: analysis results will appear here...",
-                    style={'opacity': 0, 'visibility': 'hidden'}
-                )
-
+        dbc.Container(
+            id="container-sentence_info",
+            children="PLACEHOLDER: analysis results will appear here...",
+            style={"opacity": 0, "visibility": "hidden"},
+        )
     ],
     className="w-25 m-2 p-3 bg-light border rounded-3",
     width=6,
@@ -184,19 +183,17 @@ column_sentence_info = dbc.Col(
 # column - neutralization results
 column_neutral = dbc.Col(
     [
-
-                dbc.Container(
-                    id="container-neutralization",
-                    children="PLACEHOLDER: analysis results will appear here...",
-                    style={'opacity': 0, 'visibility': 'hidden'}
-                )
-
+        dbc.Container(
+            id="container-neutralization",
+            children="PLACEHOLDER: analysis results will appear here...",
+            style={"opacity": 0, "visibility": "hidden"},
+        )
     ],
     className="w-25 m-2 p-3 bg-light border rounded-3",
     width=6,
 )
 
-hidden_div = html.Div(id='hidden-div', style={'display': 'none'})
+hidden_div = html.Div(id="hidden-div", style={"display": "none"})
 
 left_jumbotron = dbc.Col(
     html.Div(
@@ -210,8 +207,8 @@ left_jumbotron = dbc.Col(
             dbc.Button("Neutralize and compare", color="secondary", outline=True),
         ],
         className="p-5 m-2  bg-light border rounded-3",
-        id='jumbotron',
-        style={'opacity': 0, 'visibility': 'hidden'}
+        id="jumbotron",
+        style={"opacity": 0, "visibility": "hidden"},
     ),
     width=12,
 )
