@@ -6,8 +6,8 @@ import numpy as np
 import json
 from dash import Input, Output, State, html, callback, dcc, ALL
 import dash_bootstrap_components as dbc
-from dash_app.generalutils import get_completion, extract_sentences, classify_sentences, render
-from dash_app.ui_components import column_input, column_output, column_neutral, column_sentence_info, left_jumbotron
+from generalutils import get_completion, extract_sentences, classify_sentences, classify_sentences_christian, render
+from ui_components import column_input, column_output, column_neutral, column_sentence_info, left_jumbotron
 
 
 dash.register_page(__name__, path="/")
@@ -19,6 +19,7 @@ layout = dbc.Container(
         dbc.Row([column_output, column_sentence_info]),
         dbc.Row([left_jumbotron])
     ])
+
 
 
 # --- CALLBACKS
@@ -39,7 +40,7 @@ def process_text(n_clicks, input_text):
     prompt = f"""
         Write the text delimited by triple backticks \
         in form of a really short russian propaganda breaking news. \
-        Write the text in English.
+        Write the text in English. Use maximum 300 tokens.
         ```{input_text}```
         """
     output_text = get_completion(prompt)
@@ -47,8 +48,11 @@ def process_text(n_clicks, input_text):
     print(output_text)
 
     sentences = extract_sentences(output_text)
-    print(output_text)
-    classified_sentences = classify_sentences(sentences)
+    #print(output_text)
+
+    classified_sentences = classify_sentences_christian(sentences)
+
+    #classified_sentences = classify_sentences_christian(sentences)
 
     output_children = render(len(sentences), classified_sentences)
 
