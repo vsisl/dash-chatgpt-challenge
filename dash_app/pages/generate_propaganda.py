@@ -73,7 +73,7 @@ def process_text(n_clicks, input_text):
     # print(output_text)                                                                 # #
     # img = get_image(img_text)                                                            #
     #
-    
+
     sentences = extract_sentences(output_text)
     print(output_text)
 

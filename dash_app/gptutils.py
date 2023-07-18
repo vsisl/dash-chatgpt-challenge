@@ -4,6 +4,8 @@ Functions making openAI API calls.
 import openai  # chat-gpt API
 
 openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
+
+
 def get_completion(prompt, model="gpt-3.5-turbo"):
     """Creates chatGPT response
 
@@ -21,7 +23,10 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     )
     return response.choices[0].message["content"], response["usage"]["total_tokens"]
 
+
 from PIL import Image
+
+
 def get_image(text):
     """Creates an image based on the input text
 
@@ -29,28 +34,25 @@ def get_image(text):
     :param model: str; optional, default: "gpt-3.5-turbo"
     :return: str: response
     """
-    #input_img = Image.open("moscow.png").convert('RGBA')
-    #mask_img = Image.open("moscow_mask.png").convert('RGBA')
-    #import pdb; pdb.set_trace()
-    #import pdb; pdb.set_trace()
+    # input_img = Image.open("moscow.png").convert('RGBA')
+    # mask_img = Image.open("moscow_mask.png").convert('RGBA')
+    # import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     response = openai.Image.create_edit(
-        image=open('moskau.png', "rb"),
-        mask=open('moskau_mask.png', "rb"),
+        image=open("moskau.png", "rb"),
+        mask=open("moskau_mask.png", "rb"),
         prompt="A city surrounded by {text} in pastel colors",
         n=1,
-        size="256x256"
-        )
-
-    image_url = response['data'][0]['url']
-    print(image_url)
-    import pdb; pdb.set_trace()
-    response = openai.Image.create(
-        prompt = prompt,
-        n = 1,
-        size = '256x256'
+        size="256x256",
     )
-    return response.choices[0].message["content"], response['usage']['total_tokens']
 
+    image_url = response["data"][0]["url"]
+    print(image_url)
+    import pdb
+
+    pdb.set_trace()
+    response = openai.Image.create(prompt=prompt, n=1, size="256x256")
+    return response.choices[0].message["content"], response["usage"]["total_tokens"]
 
 
 def get_classification(input_text, model="text-davinci-003"):
