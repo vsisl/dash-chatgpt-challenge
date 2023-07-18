@@ -8,7 +8,6 @@ from dash import Input, Output, State, html, callback, dcc, ALL
 import dash_bootstrap_components as dbc
 from dash_app.generalutils import (
     get_completion,
-    get_image,
     extract_sentences,
     classify_sentences,
     render,
