@@ -6,8 +6,8 @@ import numpy as np
 import json
 from dash import Input, Output, State, html, callback, dcc, ALL
 import dash_bootstrap_components as dbc
-from generalutils import get_completion, extract_sentences, classify_sentences, render
-from ui_components import column_input, column_output, column_neutral, column_sentence_info, left_jumbotron
+from dash_app.generalutils import get_completion, extract_sentences, classify_sentences, render
+from dash_app.ui_components import column_input, column_output, column_neutral, column_sentence_info, left_jumbotron
 
 
 dash.register_page(__name__, path="/")
