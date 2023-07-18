@@ -11,7 +11,8 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
 
     :param prompt: str
     :param model: str; optional, default: "gpt-3.5-turbo"
-    :return: str: response
+    :return: tuple of str: response
+                      int: total API call tokens used by this function
     """
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
@@ -78,7 +79,8 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo",advanced=False):
     :param prompt: str
     :param model: str; optional, default: "gpt-3.5-turbo"
     :param advanced: if using Jan's classification method
-    :return: str: response
+    :return: tuple of str: response
+                      int: total API call tokens used by this function
     """
 
     if advanced:
