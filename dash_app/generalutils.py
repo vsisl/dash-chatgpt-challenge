@@ -99,7 +99,6 @@ def fill_out_dictionary(dictionary, other_dictionary):
     Returns:
       The filled out dictionary.
     """
-
     for key, value in other_dictionary.items():
         # import pdb; pdb.set_trace()
         if key in dictionary:
@@ -127,43 +126,23 @@ def classify_sentences(sentences, n_sentences=3):
             "confidence": "",
             "explain": "",
         }
-
-    # out_dict = dict.fromkeys(IDs,Defaults)
-    # oimport pdb; pdb.set_trace()
-    # out_dict = dict(list(enumerate(sentences))) #create a dic with keys = sentences
     confidence_ranking = np.zeros(len(sentences))
     # Iterate through the sentences and assign numbers
     n_tokens = 0
     for i, sent in enumerate(sentences):
-        # print('i=',i)
-        # print('sentence',sentence)
         out_dict[str(i)]["sentence"] = sent
         output, tokens = get_classification_cheaper(sent)
         n_tokens += tokens
-        # import pdb; pdb.set_trace()
         what = ast.literal_eval(output)
-        # import pdb; pdb.set_trace()
-        # print(what)s
-        # import pdb; pdb.set_trace()
-        # fill_out_dictionary(out_dict[i],what)
-        # import pdb; pdb.set_trace()
-        # out_dict[i] = what
         ##################################################
         out_dict[str(i)]["classes"] = what["classes"]  #     #
         out_dict[str(i)]["confidence"] = what["confidence"]  #
         out_dict[str(i)]["explain"] = what["explain"]  #
         ##################################################
-
         confidence_ranking[i] = np.max(what["confidence"])
-        # import pdb; pdb.set_trace()
-        # ary[i][0] = sentence
-        # ary[i][1] = ast.literal_eval(get_classification(sentence))
-        # ary[i][1] = what
-        # print(ary[i][0], ary[i][1])
 
-    # import pdb; pdb.set_trace()
     best = np.argsort(confidence_ranking)
-    # import pdb; pdb.set_trace()
+
     return out_dict, best, n_tokens
 
 

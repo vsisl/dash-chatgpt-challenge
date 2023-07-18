@@ -150,7 +150,6 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo", advanced=False):
             messages=messages,
             temperature=0,  # this is the degree of randomness of the model's output
         )
-
         used_tokens = response["usage"]["total_tokens"]
         response = response.choices[0].message["content"]
 
@@ -169,19 +168,12 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo", advanced=False):
                       ```{prompt}````
            """
         message = [{"role": "user", "content": prompt}]
-
         response = openai.ChatCompletion.create(
             model=model,
             messages=message,
             temperature=0,  # this is the degree of randomness of the model's output
         )
         used_tokens = response["usage"]["total_tokens"]
-
         response = response.choices[0].message["content"]
 
-        # import pdb; pdb.set_trace()
-
     return response, used_tokens
-
-
-# response.choices[0].message["content"]
