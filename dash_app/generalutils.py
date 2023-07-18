@@ -74,16 +74,35 @@ def classify_sentences(sentences):
     # Create an empty ndarray to store the sentences and their numbers
     ary = np.empty((len(sentences), 2), dtype=object)
 
-    # Iterate through the sentences and assign numbers
-    for i, sentence in enumerate(sentences):
-        what = ast.literal_eval(get_classification_cheaper(sentence))
-        print(what)
-        ary[i][0] = sentence
-        # ary[i][1] = ast.literal_eval(get_classification(sentence))
-        ary[i][1] = what
-        print(ary[i][0], ary[i][1])
+    IDs = np.arange(len(sentences)).astype(str)
+    out_dict = dict.fromkeys(IDs)
 
-    return ary
+    for k in range(len(sentences)):
+        out_dict[str(k)] = {
+            "sentence": "",
+            "classes": "",
+            "confidence": "",
+            "explain": "",
+        }
+    confidence_ranking = np.zeros(len(sentences))
+    # Iterate through the sentences and assign numbers
+    n_tokens = 0
+    for i, sent in enumerate(sentences):
+        out_dict[str(i)]["sentence"] = sent
+        output, tokens = get_classification_cheaper(sent)
+        n_tokens += tokens
+        what = ast.literal_eval(output)
+        ##################################################
+        out_dict[str(i)]["classes"] = what["classes"]  #     #
+        out_dict[str(i)]["confidence"] = what["confidence"]  #
+        out_dict[str(i)]["explain"] = what["explain"]  #
+        ##################################################
+        confidence_ranking[i] = np.max(what["confidence"])
+
+    best = np.argsort(confidence_ranking)
+
+    return out_dict, best, n_tokens
+
 
 
 # corresponding style "hover-box" located in assets/custom.css
