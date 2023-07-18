@@ -93,9 +93,8 @@ def classify_sentences(sentences):
     n_tokens = 0
     for i, sent in enumerate(sentences):
         out_dict[str(i)]["sentence"] = sent
-        output, tokens = get_classification_cheaper(sent)
+        what, tokens = get_classification_cheaper(sent)
         n_tokens += tokens
-        what = ast.literal_eval(output)
         ##################################################
         out_dict[str(i)]["classes"] = what["classes"]  #     #
         out_dict[str(i)]["confidence"] = what["confidence"]  #

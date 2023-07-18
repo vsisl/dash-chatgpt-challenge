@@ -1,6 +1,7 @@
 """
 Functions making openAI API calls.
 """
+import ast
 import openai  # chat-gpt API
 
 openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
@@ -108,12 +109,16 @@ def get_classification(input_text, model="text-davinci-003"):
     return response["choices"][0]["text"]
 
 
-def get_classification_cheaper(prompt, model="gpt-3.5-turbo"):
-    """Creates chatGPT response
+def get_classification_cheaper(sentence, model="gpt-3.5-turbo"):
+    """Takes given sentence and classifies it based on presence of propaganda techniques.
 
-    :param prompt: str
+    Uses chatGPT as a classifier.
+
+    :param sentence: str; a sentence; e.g. "BREAKING NEWS: Russian Propaganda Exposed!"
     :param model: str; optional, default: "gpt-3.5-turbo"
-    :return: str: response
+    :return: list of str: list of propaganda techniques discovered in the given sentence;
+                            e.g. ['Loaded Language']
+             int: total API call tokens used by this function call
     """
     messages = [
         {
@@ -173,7 +178,7 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo"):
             "role": "assistant",
             "content": "['Loaded Language']",
         },
-        {"role": "user", "content": prompt},
+        {"role": "user", "content": sentence},
     ]
 
     response = openai.ChatCompletion.create(
@@ -182,4 +187,11 @@ def get_classification_cheaper(prompt, model="gpt-3.5-turbo"):
         temperature=0,  # this is the degree of randomness of the model's output
     )
 
-    return response.choices[0].message["content"]
+    # de-stringify stringified list
+    propaganda_techniques = ast.literal_eval(response.choices[0].message["content"])
+    # TODO: try to avoid using literal_eval. I tried to use json.loads() instead of ast.literal_eval() but it didn't
+    #  work.
+
+    tokens_used = response["usage"]["total_tokens"]
+
+    return propaganda_techniques, tokens_used
