@@ -1,6 +1,7 @@
 from dash import Input, Output, State, html, callback, dcc, ALL
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
+from dash_iconify import DashIconify
 
 # column - text input (outdated - currently used in the generative part of the project)
 column_input = dbc.Col(
@@ -37,16 +38,17 @@ column_output = dbc.Col(
             ],
         )
     ],
-    className="w-75 m-2 h-100 p-3 bg-light border rounded-3",
+    width=6
+    # className="w-75 m-2 h-100 p-3 bg-light border rounded-3",
 )
 
 # TODO: remove this or move it to different place, maybe CSS file
 # useful style definition used across multiple components
 style = {
-    "height": 100,
+    # "height": 100,
     "marginBottom": 20,
     "padding": 10,
-    "display": "flex",
+    # "display": "flex",
 }
 
 # title of the analysis part of the project
@@ -77,6 +79,29 @@ title = dmc.Center(
     },
 )
 
+# title of the analysis part of the project
+call_to_action = dmc.Center(
+    children=[
+        html.H3(
+            children=[
+                dmc.Anchor(
+                    dmc.Button(
+                        id="go-to-generate",
+                        children="Try generating and analyzing a new propaganda text",
+                        variant="subtle",
+                        leftIcon=DashIconify(icon="emojione-monotone:hammer-and-pick"),
+                        color="gray",
+                    ),
+                    href="/generate",
+                ),
+            ],
+            style={"display": "inline-block"},
+        ),
+    ],
+    id="call-to-action",
+    style={"opacity": 0, "visibility": "hidden", "marginTop": 16},
+)
+
 
 # column - text input used in the analysis part of the project
 column_input_analyse = dmc.Center(
@@ -89,7 +114,7 @@ column_input_analyse = dmc.Center(
                         dbc.Textarea(
                             id="input-text_to_analyze",
                             placeholder="Type or paste text here...",
-                            style={"width": 550},
+                            style={"width": 500, "position": "relative"},
                         ),
                         dmc.Button(
                             "Submit Text",
@@ -122,8 +147,25 @@ container_analysis_results = dcc.Loading(
         dmc.Grid(
             id="container-all_analysis",
             gutter="xl",
-            style={"opacity": 0, "visibility": "hidden", "min-height": 100},
+            style={"opacity": 0, "visibility": "hidden", "height": "50vh"},
             children=[
+                dmc.Tooltip(
+                    multiline=True,
+                    withArrow=True,
+                    width=320,
+                    transition="fade",
+                    transitionDuration=200,
+                    label="The highlighted sentences represent the sentences with highest confidence score of"
+                          " propaganda techniques identification. You can click these sentences and see in the"
+                          " right panel which propaganda techniques were found in a sentence and why were identified"
+                          " as a part of the sentence.",
+                    children=[DashIconify(
+                        icon="heroicons:question-mark-circle-20-solid",
+                        color="#DEDEDE",
+                        width=35,
+                        style={"position": "absolute", "marginLeft": 0}
+                    )],
+                ),
                 dmc.Col(
                     id="analysis_results-container",
                     className="analysis_results-container",
@@ -138,19 +180,49 @@ container_analysis_results = dcc.Loading(
                         dmc.Group(
                             [
                                 dmc.Text("Found techniques", weight=900),
-                                dmc.Badge("PLACEHOLDER", color="red", variant="light"),
+                                dmc.Tooltip(
+                                    multiline=True,
+                                    withArrow=True,
+                                    width=220,
+                                    transition="fade",
+                                    transitionDuration=200,
+                                    label="Find out the explanations of why the above techniques"
+                                          " were identified in the sentence. The explanations are underlined"
+                                          " with color matching the color of the technique.",
+                                    children=[DashIconify(
+                                        icon="heroicons:question-mark-circle-20-solid",
+                                        # color="red",
+                                        color="#DEDEDE",
+                                        width=25,
+                                    )],
+                                ),
                             ],
                             position="apart",
                         ),
                         dmc.Text(
                             children="",
                             id="found-techniques",
-                            className="sentence_info-container",
+                            className="sentence_techniques-container",
                         ),
                         dmc.Group(
                             [
                                 dmc.Text("Explanation", weight=900),
-                                dmc.Badge("PLACEHOLDER", color="red", variant="light"),
+                                dmc.Tooltip(
+                                            multiline=True,
+                                            withArrow=True,
+                                            width=220,
+                                            transition="fade",
+                                            transitionDuration=200,
+                                            label="Find out the explanations of why the above techniques"
+                                            " were identified in the sentence. The explanations are underlined"
+                                            " with color matching the color of the technique.",
+                                            children=[DashIconify(
+                                                        icon="heroicons:question-mark-circle-20-solid",
+                                                        # color="red",
+                                                        color="#DEDEDE",
+                                                        width=25,
+                                            )],
+                                ),
                             ],
                             position="apart",
                         ),
@@ -166,6 +238,7 @@ container_analysis_results = dcc.Loading(
     ],
 )
 
+
 # column - information about the sentences
 column_sentence_info = dbc.Col(
     [
@@ -176,7 +249,7 @@ column_sentence_info = dbc.Col(
         )
     ],
     className="w-25 m-2 p-3 bg-light border rounded-3",
-    width=6,
+    # width=6,
 )
 
 
@@ -211,4 +284,48 @@ left_jumbotron = dbc.Col(
         style={"opacity": 0, "visibility": "hidden"},
     ),
     width=12,
+)
+
+footer = dmc.Container(
+    children=[
+        dmc.Footer(
+        height=100,
+        fixed=False,
+        withBorder=False,
+        children=[
+                # dmc.Space(h=145),
+                dmc.Center(
+                    children=[
+                        dmc.Anchor(
+                            html.H4(
+                                "PropagandaBot",
+                                style={
+                                    "font-family": "Propaganda",  # custom free font, located in /assets
+                                    "background": "#858585",
+                                    # "background": "#2e2d2d",
+                                    "-webkit-background-clip": "text",
+                                    "-webkit-text-fill-color": "transparent",
+                                },
+                            ),
+                            # TODO: add home address
+                            href="http://127.0.0.1:8050/"
+                        )
+                    ]
+                ),
+                html.Br(),
+                dmc.Center(
+                    [
+                        DashIconify(icon="ion:logo-github", color="gray", width=20,),
+                        dmc.Space(w=25),
+                        # dmc.Text(
+                        #     "2023",
+                        #     color="dimmed",
+                        # ),
+                        DashIconify(icon="bi:linkedin", color="gray", width=20),
+                    ]
+                ),
+            ]
+        )
+    ],
+    style={"position": "relative", "bottom": 0}
 )
