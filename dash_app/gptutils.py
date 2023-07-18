@@ -24,9 +24,6 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     return response.choices[0].message["content"], response["usage"]["total_tokens"]
 
 
-from PIL import Image
-
-
 def get_image(text):
     """Creates an image based on the input text
 
