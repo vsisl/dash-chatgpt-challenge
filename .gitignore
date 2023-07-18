@@ -1,8 +1,8 @@
 # API keys and other secrets
-openai_api_key.txt
+**/openai_api_key.txt
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
