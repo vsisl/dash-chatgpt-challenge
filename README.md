@@ -13,7 +13,7 @@ $
 
 #### Production environment
 ```bash
-$ 
+$ docker compose -f docker-compose.yml up
 ```
 
 ### Without Docker
