@@ -5,7 +5,7 @@ import re
 import ast
 import numpy as np
 from dash import html
-from gptutils import get_completion, get_classification, get_classification_cheaper
+from gptutils import get_completion, get_image, get_classification, get_classification_cheaper
 
 # TODO: probably remove this - my initial thought was to use different colors for differen techniques, but generally
 #       there are multiple techniques present in a sentence
@@ -144,7 +144,6 @@ def classify_sentences(sentences, n_sentences=3):
     best = np.argsort(confidence_ranking)
 
     return out_dict, best, n_tokens
-
 
 # corresponding style "hover-box" located in assets/custom.css
 def style_name(name):
