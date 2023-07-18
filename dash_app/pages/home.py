@@ -6,8 +6,19 @@ import numpy as np
 import json
 from dash import Input, Output, State, html, callback, dcc, ALL
 import dash_bootstrap_components as dbc
-from dash_app.generalutils import get_completion, extract_sentences, classify_sentences, render
-from dash_app.ui_components import column_input, column_output, column_neutral, column_sentence_info, left_jumbotron
+from dash_app.generalutils import (
+    get_completion,
+    extract_sentences,
+    classify_sentences,
+    render,
+)
+from dash_app.ui_components import (
+    column_input,
+    column_output,
+    column_neutral,
+    column_sentence_info,
+    left_jumbotron,
+)
 
 
 dash.register_page(__name__, path="/")
@@ -17,12 +28,13 @@ layout = dbc.Container(
     children=[
         dbc.Row([column_input]),
         dbc.Row([column_output, column_sentence_info]),
-        dbc.Row([left_jumbotron])
-    ])
-
+        dbc.Row([left_jumbotron]),
+    ]
+)
 
 
 # --- CALLBACKS
+
 
 @callback(
     Output(component_id="container-analysis_results", component_property="children"),
@@ -48,37 +60,39 @@ def process_text(n_clicks, input_text):
     print(output_text)
 
     sentences = extract_sentences(output_text)
-    #print(output_text)
+    # print(output_text)
 
     classified_sentences, ranking, n_tokens = classify_sentences(sentences)
     # caution: ranking starts with the lowest
     n_tokens += output_tokens
 
-    #import pdb; pdb.set_trace()
-    #classified_sentences = classify_sentences_christian(sentences)
+    # import pdb; pdb.set_trace()
+    # classified_sentences = classify_sentences_christian(sentences)
 
     output_children = render(len(sentences), classified_sentences)
 
-    return output_children,\
-        {'opacity': 1, 'visibility': 'visible', 'transition': 'opacity 1.0s ease'},\
-        {'opacity': 1, 'visibility': 'visible', 'transition': 'opacity 2.0s ease'}
+    return (
+        output_children,
+        {"opacity": 1, "visibility": "visible", "transition": "opacity 1.0s ease"},
+        {"opacity": 1, "visibility": "visible", "transition": "opacity 2.0s ease"},
+    )
 
 
 # callback to update info about which highlighted sentence was selected - the definition of the mark component is
 #  located in generalutils.py, in the style_box() function
 @callback(
     Output(component_id="container-sentence_info", component_property="children"),
-    Input({'type': 'mark', 'index': ALL}, 'n_clicks'),
-    State({'type': 'mark', 'index': ALL}, 'children'),
-    prevent_initial_call=True
+    Input({"type": "mark", "index": ALL}, "n_clicks"),
+    State({"type": "mark", "index": ALL}, "children"),
+    prevent_initial_call=True,
 )
 def display_mark_info(n_clicks, mark_values):
     ctx = dash.callback_context
     if not ctx.triggered:
-        return 'Click on a mark...'
+        return "Click on a mark..."
     else:
-        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-        mark_index = json.loads(button_id)['index']
+        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+        mark_index = json.loads(button_id)["index"]
         return f"You clicked on {mark_values[mark_index]}."
 
 

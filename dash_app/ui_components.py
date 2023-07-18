@@ -44,12 +44,11 @@ column_output = dbc.Col(
 # column - information about the sentences
 column_sentence_info = dbc.Col(
     [
-                dbc.Container(
-                    id="container-sentence_info",
-                    children="PLACEHOLDER: analysis results will appear here...",
-                    style={'opacity': 0, 'visibility': 'hidden'}
-                )
-
+        dbc.Container(
+            id="container-sentence_info",
+            children="PLACEHOLDER: analysis results will appear here...",
+            style={"opacity": 0, "visibility": "hidden"},
+        )
     ],
     className="w-25 m-2 p-3 bg-light border rounded-3",
     width=6,
@@ -59,19 +58,17 @@ column_sentence_info = dbc.Col(
 # column - neutralization results
 column_neutral = dbc.Col(
     [
-
-                dbc.Container(
-                    id="container-neutralization",
-                    children="PLACEHOLDER: analysis results will appear here...",
-                    style={'opacity': 0, 'visibility': 'hidden'}
-                )
-
+        dbc.Container(
+            id="container-neutralization",
+            children="PLACEHOLDER: analysis results will appear here...",
+            style={"opacity": 0, "visibility": "hidden"},
+        )
     ],
     className="w-25 m-2 p-3 bg-light border rounded-3",
     width=6,
 )
 
-hidden_div = html.Div(id='hidden-div', style={'display': 'none'})
+hidden_div = html.Div(id="hidden-div", style={"display": "none"})
 
 left_jumbotron = dbc.Col(
     html.Div(
@@ -85,8 +82,8 @@ left_jumbotron = dbc.Col(
             dbc.Button("Neutralize and compare", color="secondary", outline=True),
         ],
         className="p-5 m-2  bg-light border rounded-3",
-        id='jumbotron',
-        style={'opacity': 0, 'visibility': 'hidden'}
+        id="jumbotron",
+        style={"opacity": 0, "visibility": "hidden"},
     ),
     width=12,
 )

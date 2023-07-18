@@ -23,26 +23,26 @@ DEFAULT_LABEL_COLORS = {
     "R": "#f0d0ff",
     "S": "#bfe1d9",
     "TtC": "#bfe1d9",
-    "WoSMoRH": "#e4e7d2"
+    "WoSMoRH": "#e4e7d2",
 }
 
 
 # Dictionary: technique name to abbreviation
 term_to_abbreviation = {
-    'Appeal to Authority': 'AtA',
-    'Appeal to Fear Prejudice': 'AtFP',
-    'Bandwagon or Reductio ad hitlerum': 'BoRaH',
-    'Black and White Fallacy': 'BaWF',
-    'Causal Oversimplification': 'CO',
-    'Doubt': 'D',
-    'Exaggeration or Minimisation': 'EoM',
-    'Flag-Waving': 'FW',
-    'Loaded Language': 'LL',
-    'Name Calling or Labeling': 'NCoL',
-    'Repetition': 'R',
-    'Slogans': 'S',
-    'Thought-terminating Cliches': 'TtC',
-    'Whataboutism or Straw Man or Red Herring': 'WoSMoRH'
+    "Appeal to Authority": "AtA",
+    "Appeal to Fear Prejudice": "AtFP",
+    "Bandwagon or Reductio ad hitlerum": "BoRaH",
+    "Black and White Fallacy": "BaWF",
+    "Causal Oversimplification": "CO",
+    "Doubt": "D",
+    "Exaggeration or Minimisation": "EoM",
+    "Flag-Waving": "FW",
+    "Loaded Language": "LL",
+    "Name Calling or Labeling": "NCoL",
+    "Repetition": "R",
+    "Slogans": "S",
+    "Thought-terminating Cliches": "TtC",
+    "Whataboutism or Straw Man or Red Herring": "WoSMoRH",
 }
 
 # Dictionary: abbreviation to technique name
@@ -61,7 +61,7 @@ def extract_sentences(text):
     """
 
     # Split the text into sentences using regular expressions
-    sentences = re.split(r'(?<=[.!?])\s+', text.replace('\n', ' '))
+    sentences = re.split(r"(?<=[.!?])\s+", text.replace("\n", " "))
 
     # Remove leading and trailing whitespaces from each sentence
     sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
@@ -87,113 +87,128 @@ def extract_sentences(text):
 #     return ary                                                         #
 ##########################################################################
 
+
 # credits to Bard
 def fill_out_dictionary(dictionary, other_dictionary):
-  """Fills out some keys in the dictionary using the other dictionary.
+    """Fills out some keys in the dictionary using the other dictionary.
 
-  Args:
-    dictionary: The dictionary to fill out.
-    other_dictionary: The dictionary with the values to use to fill out the first dictionary.
+    Args:
+      dictionary: The dictionary to fill out.
+      other_dictionary: The dictionary with the values to use to fill out the first dictionary.
 
-  Returns:
-    The filled out dictionary.
-  """
+    Returns:
+      The filled out dictionary.
+    """
 
-  for key, value in other_dictionary.items():
-    #import pdb; pdb.set_trace()
-    if key in dictionary:
-      dictionary[key] = value
-    else:
-      if isinstance(value, dict):
-        dictionary[key] = fill_out_dictionary({}, value)
-      else:
-        dictionary[key] = value
+    for key, value in other_dictionary.items():
+        # import pdb; pdb.set_trace()
+        if key in dictionary:
+            dictionary[key] = value
+        else:
+            if isinstance(value, dict):
+                dictionary[key] = fill_out_dictionary({}, value)
+            else:
+                dictionary[key] = value
 
-  return dictionary
+    return dictionary
 
 
-def classify_sentences(sentences,n_sentences=3):
+def classify_sentences(sentences, n_sentences=3):
     # Create an empty ndarray to store the sentences and their numbers
     ary = np.empty((len(sentences), 2), dtype=object)
 
-    IDs  = np.arange(len(sentences)).astype(str)
+    IDs = np.arange(len(sentences)).astype(str)
     out_dict = dict.fromkeys(IDs)
 
-
     for k in range(len(sentences)):
-        out_dict[str(k)] =  {'sentence': '', 'classes': '', 'confidence': '', 'explain': ''}
+        out_dict[str(k)] = {
+            "sentence": "",
+            "classes": "",
+            "confidence": "",
+            "explain": "",
+        }
 
-    #out_dict = dict.fromkeys(IDs,Defaults)
+    # out_dict = dict.fromkeys(IDs,Defaults)
     # oimport pdb; pdb.set_trace()
-    #out_dict = dict(list(enumerate(sentences))) #create a dic with keys = sentences
+    # out_dict = dict(list(enumerate(sentences))) #create a dic with keys = sentences
     confidence_ranking = np.zeros(len(sentences))
     # Iterate through the sentences and assign numbers
     n_tokens = 0
     for i, sent in enumerate(sentences):
         # print('i=',i)
-        #print('sentence',sentence)
-        out_dict[str(i)]['sentence'] = sent
+        # print('sentence',sentence)
+        out_dict[str(i)]["sentence"] = sent
         output, tokens = get_classification_cheaper(sent)
         n_tokens += tokens
-        #import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         what = ast.literal_eval(output)
-        #import pdb; pdb.set_trace()
-        #print(what)s
-        #import pdb; pdb.set_trace()
-        #fill_out_dictionary(out_dict[i],what)
-        #import pdb; pdb.set_trace()
-        #out_dict[i] = what
+        # import pdb; pdb.set_trace()
+        # print(what)s
+        # import pdb; pdb.set_trace()
+        # fill_out_dictionary(out_dict[i],what)
+        # import pdb; pdb.set_trace()
+        # out_dict[i] = what
         ##################################################
-        out_dict[str(i)]['classes'] = what['classes'] #     #
-        out_dict[str(i)]['confidence'] = what['confidence'] #
-        out_dict[str(i)]['explain'] = what['explain']       #
+        out_dict[str(i)]["classes"] = what["classes"]  #     #
+        out_dict[str(i)]["confidence"] = what["confidence"]  #
+        out_dict[str(i)]["explain"] = what["explain"]  #
         ##################################################
 
-        confidence_ranking[i] = np.max(what['confidence'])
-        #import pdb; pdb.set_trace()
-        #ary[i][0] = sentence
+        confidence_ranking[i] = np.max(what["confidence"])
+        # import pdb; pdb.set_trace()
+        # ary[i][0] = sentence
         # ary[i][1] = ast.literal_eval(get_classification(sentence))
-        #ary[i][1] = what
-        #print(ary[i][0], ary[i][1])
+        # ary[i][1] = what
+        # print(ary[i][0], ary[i][1])
 
-   # import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     best = np.argsort(confidence_ranking)
-    #import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     return out_dict, best, n_tokens
 
 
 # corresponding style "hover-box" located in assets/custom.css
 def style_name(name):
-    return html.Span(name, style={
-        "font-size": "0.8em",
-        "font-weight": "bold",
-        "line-height": "1",
-        "border-radius": "0.35em",
-        "text-transform": "uppercase",
-        "vertical-align": "middle",
-        "margin-left": "0.5rem"
-    }, className="hover-box")
+    return html.Span(
+        name,
+        style={
+            "font-size": "0.8em",
+            "font-weight": "bold",
+            "line-height": "1",
+            "border-radius": "0.35em",
+            "text-transform": "uppercase",
+            "vertical-align": "middle",
+            "margin-left": "0.5rem",
+        },
+        className="hover-box",
+    )
 
 
 # corresponding style "hover-text" located in assets/custom.css
 def style_box(children, title, idx):
-    return html.Mark(children, id={'type': 'mark', 'index': idx}, title=title, style={
-        "padding": "0.45em 0.6em",
-        "margin": "0 0.25em",
-        "line-height": "1",
-        "border-radius": "0.35em",
-        "background-color": f"rgba(#fffdc9, 0)",
-        "transition": "background-color 0.3s ease",
-        "cursor": "default",
-    }, className="hover-box")
+    return html.Mark(
+        children,
+        id={"type": "mark", "index": idx},
+        title=title,
+        style={
+            "padding": "0.45em 0.6em",
+            "margin": "0 0.25em",
+            "line-height": "1",
+            "border-radius": "0.35em",
+            "background-color": f"rgba(#fffdc9, 0)",
+            "transition": "background-color 0.3s ease",
+            "cursor": "default",
+        },
+        className="hover-box",
+    )
 
 
 def entity(children, techniques, idx):
-    name = ''
-    title = ''
+    name = ""
+    title = ""
     for technique_label in techniques:
-        title += technique_label + ','
-        name += term_to_abbreviation[technique_label] + ','
+        title += technique_label + ","
+        name += term_to_abbreviation[technique_label] + ","
 
     if type(children) is str:
         children = [children]
