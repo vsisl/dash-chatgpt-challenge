@@ -7,9 +7,9 @@ openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
 
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
-    """Creates chatGPT response
+    """Creates chatGPT response for a given prompt.
 
-    :param prompt: str
+    :param prompt: str; prompt for chat GPT
     :param model: str; optional, default: "gpt-3.5-turbo"
     :return: tuple of str: response
                       int: total API call tokens used by this function
