@@ -38,7 +38,7 @@ def get_image(text):
     response = openai.Image.create_edit(
         image=open('moskau.png', "rb"),
         mask=open('moskau_mask.png', "rb"),
-        prompt="{text} flying towards a city in pastel colors",
+        prompt="A city surrounded by {text} in pastel colors",
         n=1,
         size="256x256"
         )

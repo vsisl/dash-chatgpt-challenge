@@ -59,19 +59,19 @@ def process_text(n_clicks, input_text):
     output_text, output_tokens = get_completion(prompt)
 
     # Experimental: generate image based on prompt
-    ######################################################################################
-    # prompt_img = f"""                                                                  #
-    #     What is the main nomen in the text delimited by triple backticks? \            #
-    #     If there is no noun, what is the main verb? \                                  #
-    #     As an output just give me either the noun or the nominalisation of the verb. \ #
-    #     No addition text, just one token.                                              #
-    #     ```{input_text}```                                                             #
-    #     """                                                                            #
-    #                                                                                    #
-    # img_text, img_tokens = get_completion(prompt_img)                                  #
-    # print(output_text)                                                                 #
-    # img = get_image(img_text)                                                          #
-    ######################################################################################
+    # prompt_img = f"""                                                                  # #
+    #     What is the main nomen in the text delimited by triple backticks? \            # #
+    #     If there is no noun, what is the main verb? \                                  # #
+    #     As an output just give me either the noun or the nominalisation of the verb. \ # #
+    #     No addition text, just one token.                                              # #
+    #     ```{input_text}```                                                             # #
+    #     """                                                                            # #
+    #                                                                                    # #
+    # img_text, img_tokens = get_completion(prompt_img)                                  # #
+    # print(output_text)                                                                 # #
+    # img = get_image(img_text)                                                            #
+    #
+
 
     print(output_text)
     sentences = extract_sentences(output_text)
