@@ -68,7 +68,6 @@ def extract_sentences(text):
 
     return sentences
 
-
 # former classfier from Jan
 ##########################################################################
 # def classify_sentences(sentences):                                     #
@@ -86,31 +85,6 @@ def extract_sentences(text):
 #                                                                        #
 #     return ary                                                         #
 ##########################################################################
-
-
-# credits to Bard
-def fill_out_dictionary(dictionary, other_dictionary):
-    """Fills out some keys in the dictionary using the other dictionary.
-
-    Args:
-      dictionary: The dictionary to fill out.
-      other_dictionary: The dictionary with the values to use to fill out the first dictionary.
-
-    Returns:
-      The filled out dictionary.
-    """
-    for key, value in other_dictionary.items():
-        # import pdb; pdb.set_trace()
-        if key in dictionary:
-            dictionary[key] = value
-        else:
-            if isinstance(value, dict):
-                dictionary[key] = fill_out_dictionary({}, value)
-            else:
-                dictionary[key] = value
-
-    return dictionary
-
 
 def classify_sentences(sentences, n_sentences=3):
     # Create an empty ndarray to store the sentences and their numbers
