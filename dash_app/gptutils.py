@@ -12,8 +12,8 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
 
     :param prompt: str; prompt for chat GPT
     :param model: str; optional, default: "gpt-3.5-turbo"
-    :return: tuple of str: response
-                      int: total API call tokens used by this function
+    :return: str: response
+             int: total API call tokens used by this function call
     """
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
