@@ -96,7 +96,7 @@ app.title = "Amazing Dash app"
 # main app layout
 app.layout = dbc.Container(
     [
-        navbar,
+        # navbar,
         dash.page_container,
     ]
 )
