@@ -55,13 +55,16 @@ def process_text(n_clicks, input_text):
         Write the text in English.
         ```{input_text}```
         """
-    output_text = get_completion(prompt)
+    output_text, output_tokens = get_completion(prompt)
 
     print(output_text)
 
     sentences = extract_sentences(output_text)
     print(output_text)
-    classified_sentences = classify_sentences(sentences)
+
+    classified_sentences, ranking, n_tokens = classify_sentences(sentences)
+    # caution: ranking starts with the lowest
+    n_tokens += output_tokens
 
     output_children = render(len(sentences), classified_sentences)
 
