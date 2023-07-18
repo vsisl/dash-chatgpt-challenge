@@ -6,7 +6,7 @@ import ast
 import numpy as np
 import pandas as pd
 from dash import html
-from dash_app.gptutils import get_completion, get_classification, get_classification_cheaper
+from gptutils import get_completion, get_classification, get_classification_cheaper
 
 # TODO: probably remove this - my initial thought was to use different colors for different techniques, but generally
 #       there are multiple techniques present in a sentence
@@ -122,12 +122,43 @@ def style_box(children, title, idx):
     )
 
 
+def style_technique(technique):
+    return html.Mark(
+        technique,
+        style={
+            "padding": "7px",
+            "margin": "7px",
+            "line-height": "1",
+            "border-radius": "0.35em",
+            "background-color": DEFAULT_LABEL_COLORS[term_to_abbreviation[technique]],
+            "transition": "background-color 0.3s ease",
+            "cursor": "default",
+        },
+    )
+
+
+def style_explanation(explanation, technique):
+    return html.Span(
+        explanation,
+        style={
+            "text-decoration": "underline",
+            "text-decoration-style": "solid",
+            "text-decoration-color": DEFAULT_LABEL_COLORS[
+                term_to_abbreviation[technique]
+            ],
+            "text-decoration-thickness": 3,
+        },
+    )
+
+
 def entity(children, techniques, idx):
     name = ""
     title = ""
     for technique_label in techniques:
-        title += technique_label + ","
-        name += term_to_abbreviation[technique_label] + ","
+        title += technique_label + ", "
+        name += term_to_abbreviation[technique_label] + ", "
+    title = title[:-2]
+    name = name[:-2]
 
     if type(children) is str:
         children = [children]
