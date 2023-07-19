@@ -10,6 +10,7 @@ from dash_app.gptutils import (
     get_completion,
     get_classification,
     get_classification_cheaper,
+    get_classification_christian,
 )
 
 # TODO: probably remove this - my initial thought was to use different colors for different techniques, but generally
@@ -75,36 +76,60 @@ def extract_sentences(text):
 
 
 def classify_sentences(sentences):
-    # Create an empty ndarray to store the sentences and their numbers
-    ary = np.empty((len(sentences), 2), dtype=object)
+    """Classifies given sentences for presence of propaganda techniques.
 
-    IDs = np.arange(len(sentences)).astype(str)
-    out_dict = dict.fromkeys(IDs)
+    :param sentences: list of str; list of sentences to be classified;
+                        e.g. ['BREAKING NEWS: Russian Propaganda Exposed!',
+                              "In a shocking revelation, evidence has emerged exposing the Russian government's ..."]
+    :return: out dict: dict;
+                        e.g.
+                            {
+                                '0': {
+                                    'sentence': 'BREAKING NEWS: Russian Propaganda Exposed!',
+                                    'classes': ['Flag-Waving'],
+                                    'confidence': [1],
+                                    'explain': ['The sentence uses loaded language and exclamation marks to create a sense of urgency and patriotism, indicating a flag-waving technique.']
+                                },
+                                '1': {
+                                    'sentence': "In a shocking revelation, evidence has emerged exposing the Russian government's ...",
+                                    'classes': ['Appeal to Fear Prejudice'],
+                                    'confidence': [1],
+                                    'explain': ['The sentence uses loaded language ("shocking revelation") and appeals to fear by exposing the Russian government.']
+                                }
+                            }
+             best: numpy.ndarray TODO: explain
+             total_tokens: int; total API tokens used by this function call
+    """
+    out_dict = {}
 
-    for k in range(len(sentences)):
-        out_dict[str(k)] = {
-            "sentence": "",
-            "classes": "",
-            "confidence": "",
-            "explain": "",
-        }
     confidence_ranking = np.zeros(len(sentences))
     # Iterate through the sentences and assign numbers
-    n_tokens = 0
-    for i, sent in enumerate(sentences):
-        out_dict[str(i)]["sentence"] = sent
-        what, tokens = get_classification_cheaper(sent)
-        n_tokens += tokens
-        ##################################################
-        out_dict[str(i)]["classes"] = what["classes"]  #     #
-        out_dict[str(i)]["confidence"] = what["confidence"]  #
-        out_dict[str(i)]["explain"] = what["explain"]  #
-        ##################################################
-        confidence_ranking[i] = np.max(what["confidence"])
+    total_tokens = 0
+    for i, sentence in enumerate(sentences):
+        # TODO: refactor
+        idx = str(i)  # strigified integer
+        out_dict[idx] = {}
 
+        # TODO: possibly add a boolean switch to be able to choose between
+        #  get_classification_christian() and
+        #  get_classification_cheaper()
+        classification_dict, tokens = get_classification_christian(sentence)
+        total_tokens += tokens
+
+        out_dict[idx] = {
+            "sentence": sentence,
+            "classes": classification_dict["classes"],
+            "confidence": classification_dict["confidence"],
+            "explain": classification_dict["explain"]
+        }
+
+        # find the highest propaganda score among all propaganda techniques for each sentence
+        confidence_ranking[i] = np.max(classification_dict["confidence"])
+
+    # find the highest propaganda score among all sentences
     best = np.argsort(confidence_ranking)
 
-    return out_dict, best, n_tokens
+    return out_dict, best, total_tokens
 
 
 # corresponding style "hover-box" located in assets/custom.css
