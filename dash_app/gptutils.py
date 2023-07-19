@@ -2,6 +2,7 @@
 Functions making openAI API calls.
 """
 import ast
+import json
 import openai  # chat-gpt API
 
 openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
@@ -205,9 +206,9 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     :param sentence: str; a sentence; e.g. "BREAKING NEWS: Russian Propaganda Exposed!"
     :param model: str; optional, default: "gpt-3.5-turbo"
     :return: response: dict; contains the following key-value pairs:
-                                'classes':
-                                'confidence':
-                                'explain':
+                                'classes': list of str; list of propaganda techniques
+                                'confidence': list of numerical values; confidence index for each propaganda technique
+                                'explain': list of str; explanations why given propaganda techniques were assigned
              used_tokens int: total API call tokens used by this function call
     """
     prompt = f""" classify the sentence delimited by triple backticks into the following list of classes:
@@ -230,14 +231,21 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
         temperature=0,  # this is the degree of randomness of the model's output
     )
 
-    response = response.choices[0].message["content"]
+    # extract data of interest
+    try:
+        # try converting stringified dictionary into a dict using json
+        classification_result = json.loads(response.choices[0].message["content"])
+    except json.decoder.JSONDecodeError:
+        # if json fails try literal eval
+        classification_result = ast.literal_eval(response.choices[0].message["content"])
+
     used_tokens = response["usage"]["total_tokens"]
 
     # validate that the response is a dictionary with the expected keys
-    if type(response) is not dict:
+    if type(classification_result) is not dict:
         raise TypeError(f"Response is not a dictionary.")
 
-    if not any(key in response.keys() for key in ["classes", "confidence", "explain"]):
+    if not any(key in classification_result.keys() for key in ["classes", "confidence", "explain"]):
         raise ValueError(f"Response does not contain the expected keys.")
 
-    return response, used_tokens
+    return classification_result, used_tokens
