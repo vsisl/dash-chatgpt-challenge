@@ -169,11 +169,15 @@ def style_box(children, title, idx):
 
 
 def entity(children, techniques, idx):
+    # TODO: add docstring
     name = ""
     title = ""
-    for technique_label in techniques:
-        title += technique_label + ","
-        name += term_to_abbreviation[technique_label] + ","
+
+    # if there are propaganda techniques in the given sentence, apply special styling
+    if techniques is not None:
+        for technique_label in techniques:
+            title += technique_label + ","
+            name += term_to_abbreviation[technique_label] + ","
 
     if type(children) is str:
         children = [children]
