@@ -195,3 +195,49 @@ def get_classification_cheaper(sentence, model="gpt-3.5-turbo"):
     tokens_used = response["usage"]["total_tokens"]
 
     return propaganda_techniques, tokens_used
+
+
+def get_classification_christian(sentence, model="gpt-3.5-turbo"):
+    """Takes given sentence and classifies it based on presence of propaganda techniques.
+
+    Uses chatGPT as a classifier.
+
+    :param sentence: str; a sentence; e.g. "BREAKING NEWS: Russian Propaganda Exposed!"
+    :param model: str; optional, default: "gpt-3.5-turbo"
+    :return: response: dict; contains the following key-value pairs:
+                                'classes':
+                                'confidence':
+                                'explain':
+             used_tokens int: total API call tokens used by this function call
+    """
+    prompt = f""" classify the sentence delimited by triple backticks into the following list of classes:
+                         ‘Appeal to Authority’, ‘Appeal to Fear Prejudice’,‘Bandwagon, Reductio ad hitlerum’,' Black and White Fallacy’, \
+                         ‘Causal Oversimplification’, ‘Doubt’, ‘Exaggeration, Minimisation’, ‘Flag-Waving’, ‘Loaded Languag’, \
+                         ‘Name Calling, Labeling’, ‘Repetition’, ‘Slogans’, ‘Thought-terminating Cliches’, \
+                         ‘Whataboutism, Straw Man, Red Herring’ \
+                         If no class was classified, assign the sentence the 'None' class.
+                         As an output, give me a python dictionary with the following keys:
+                         1. 'classes' where all the classes are saved as an array
+                         2. 'confidence' where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. The 'None' \
+                            the 'None' class should be assign a 0 by default.
+                         3. 'explain' where an explaination is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
+                          ```{sentence}````
+               """
+    message = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=message,
+        temperature=0,  # this is the degree of randomness of the model's output
+    )
+
+    response = response.choices[0].message["content"]
+    used_tokens = response["usage"]["total_tokens"]
+
+    # validate that the response is a dictionary with the expected keys
+    if type(response) is not dict:
+        raise TypeError(f"Response is not a dictionary.")
+
+    if not any(key in response.keys() for key in ["classes", "confidence", "explain"]):
+        raise ValueError(f"Response does not contain the expected keys.")
+
+    return response, used_tokens
