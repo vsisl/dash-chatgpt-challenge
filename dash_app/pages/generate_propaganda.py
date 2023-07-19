@@ -80,7 +80,7 @@ def process_text(n_clicks, input_text):
     # caution: ranking starts with the lowest
     n_tokens += output_tokens
 
-    output_children = render(len(sentences), classified_sentences)
+    output_children = render(classified_sentences)
 
     return (
         output_children,

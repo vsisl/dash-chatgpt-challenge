@@ -187,17 +187,21 @@ def entity(children, techniques, idx):
     return style_box(children, title, idx)
 
 
-def render(length, ary):
+def render(classified_sentences):
+    # TODO: add docstring
     children = []
-    idx = 0
-    for i in range(length):
-        if ary[i][1] is None:
-            children.append(ary[i][0])
+
+    for i, sentence_dict in classified_sentences.items():
+
+        # if sentence does not contain any propaganda techniques, simply render it as is
+        if sentence_dict['classes'] is None:
+            children.append(sentence_dict['sentence'])
+
+        # if sentence contains propaganda techniques, apply special styling and add labels
         else:
-            labels = ary[i][1]
+            labels = sentence_dict['classes']
             # children.append(entity(ary[i][0], term_to_abbreviation[labels[0]], idx))
-            children.append(entity(ary[i][0], labels, idx))
-            idx += 1
+            children.append(entity(children=sentence_dict['sentence'], techniques=labels, idx=int(i)))
 
     return children
 
