@@ -109,89 +109,109 @@ def get_classification(input_text, model="text-davinci-003"):
     return response["choices"][0]["text"]
 
 
-def get_classification_cheaper(sentence, model="gpt-3.5-turbo"):
-    """Takes given sentence and classifies it based on presence of propaganda techniques.
+def get_classification_cheaper(prompt, model="gpt-3.5-turbo", advanced=False):
+    """Creates chatGPT response
 
-    Uses chatGPT as a classifier.
-
-    :param sentence: str; a sentence; e.g. "BREAKING NEWS: Russian Propaganda Exposed!"
+    :param prompt: str
     :param model: str; optional, default: "gpt-3.5-turbo"
-    :return: list of str: list of propaganda techniques discovered in the given sentence;
-                            e.g. ['Loaded Language']
-             int: total API call tokens used by this function call
+    :param advanced: if using Jan's classification method
+    :return: tuple of str: response
+                      int: total API call tokens used by this function
     """
-    messages = [
-        {
-            "role": "system",
-            "content": "You are a model that finds propaganda techniques in a provided text. The following is a list of techniques and their definitions used in propaganda texts:\n\n'Appeal to Authority' - Stating that a claim is true simply because a valid authority or expert on the issue said it was true, without any other supporting evidence offered.\n\n'Appeal to Fear Prejudice' - Seeking to build support for an idea by instilling anxiety and/or panic in the population towards an alternative.\n\n'Bandwagon or Reductio ad hitlerum' - Attempting to persuade the target audience to join in and take the course of action because everyone else is taking the same action.\n\n'Black and White Fallacy' - Presenting two alternative options as the only possibilities, when in fact more possibilities exist. As an extreme case, tell the audience exactly what actions to take, eliminating any other possible choices.\n\n'Causal Oversimplification' - Assuming a single cause or reason when there are actually multiple causes for an issue.\n\n'Doubt' - Questioning the credibility of someone or something.\n\n'Exaggeration or Minimisation' - Either representing something in an excessive manner: making things larger, better, worse (e.g., the best of the best, quality guaranteed) or making something seem less important or smaller than it really is (e.g., saying that an insult was just a joke).\n\n'Flag-Waving' - Playing on strong national feeling (or to any group; e.g., race, gender, political preference) to justify or promote an action or idea.\n\n'Loaded Language' - Using specific words and phrases with strong emotional implications (either positive or negative) to influence an audience.\n\n'Name Calling or Labeling' - Labeling the object of the propaganda campaign as either something the target audience fears, hates, finds undesirable or loves, praises.\n\n'Repetition' - Repeating the same message over and over again so that the audience will eventually accept it.\n\n'Slogans' - A brief and striking phrase that may include labeling and stereotyping. Slogans tend to act as emotional appeals.\n\n'Thought-terminating Cliches' - Words or phrases that discourage critical thought and meaningful discussion about a given topic. They are typically short, generic sentences that offer seemingly simple answers to complex questions or that distract attention away from other lines of thought.\n\n'Whataboutism or Straw Man or Red Herring' - A technique that attempts to discredit an opponent's position by charging them with hypocrisy without directly disproving their argument, when an opponent's proposition is substituted with a similar one which is then refuted in place of the original proposition or introducing irrelevant material to the issue being discussed, so that everyone's attention is diverted away from the points made.",
-        },
-        {
-            "role": "user",
-            "content": "In the following text identify which of these techniques are present in a sentence, it can be multiple or none. Enclose the found techniques in each sentence in square brackets imitating input for Python list. Separate the techniques with a comma, put parentheses around each found technique, e.g. ['Flag-Waving',  'Loaded Language'] or None if no technique is found.",
-        },
-        {
-            "role": "assistant",
-            "content": "Okay, I understand. I will either return a list containing the found techniques or None. For multiple sentences a will return a combination of lists and None delimited by commas.",
-        },
-        {
-            "role": "user",
-            "content": "The global economy would plunge into chaos, with skyrocketing fuel prices, widespread unemployment, and a devastating blow to industries heavily reliant on oil.",
-        },
-        {"role": "assistant", "content": "['Appeal to Fear Prejudice']"},
-        {
-            "role": "user",
-            "content": "Democrats bolted as soon as Trump's speech ended in an apparent effort to signal they can't even stomach being in the same room as the president.",
-        },
-        {
-            "role": "assistant",
-            "content": "['Exaggeration or Minimisation', 'Loaded Language']",
-        },
-        {
-            "role": "user",
-            "content": "By banning oil, they aim to cripple not only their adversaries but also their allies, leaving them at the mercy of their own agenda.",
-        },
-        {
-            "role": "assistant",
-            "content": "['Exaggeration or Minimisation']",
-        },
-        {
-            "role": "user",
-            "content": "Together, we can expose America's true intentions and safeguard the world from their manipulative grasp.",
-        },
-        {
-            "role": "assistant",
-            "content": "['Appeal to Fear Prejudice']",
-        },
-        {
-            "role": "user",
-            "content": "This is a car.",
-        },
-        {
-            "role": "assistant",
-            "content": "None",
-        },
-        {
-            "role": "user",
-            "content": "Our vast reserves and unwavering determination will ensure that the global oil market remains stable and prosperous.",
-        },
-        {
-            "role": "assistant",
-            "content": "['Loaded Language']",
-        },
-        {"role": "user", "content": sentence},
-    ]
 
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-        temperature=0,  # this is the degree of randomness of the model's output
-    )
+    if advanced:
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a model that finds propaganda techniques in a provided text. The following is a list of techniques and their definitions used in propaganda texts:\n\n'Appeal to Authority' - Stating that a claim is true simply because a valid authority or expert on the issue said it was true, without any other supporting evidence offered.\n\n'Appeal to Fear Prejudice' - Seeking to build support for an idea by instilling anxiety and/or panic in the population towards an alternative.\n\n'Bandwagon or Reductio ad hitlerum' - Attempting to persuade the target audience to join in and take the course of action because everyone else is taking the same action.\n\n'Black and White Fallacy' - Presenting two alternative options as the only possibilities, when in fact more possibilities exist. As an extreme case, tell the audience exactly what actions to take, eliminating any other possible choices.\n\n'Causal Oversimplification' - Assuming a single cause or reason when there are actually multiple causes for an issue.\n\n'Doubt' - Questioning the credibility of someone or something.\n\n'Exaggeration or Minimisation' - Either representing something in an excessive manner: making things larger, better, worse (e.g., the best of the best, quality guaranteed) or making something seem less important or smaller than it really is (e.g., saying that an insult was just a joke).\n\n'Flag-Waving' - Playing on strong national feeling (or to any group; e.g., race, gender, political preference) to justify or promote an action or idea.\n\n'Loaded Language' - Using specific words and phrases with strong emotional implications (either positive or negative) to influence an audience.\n\n'Name Calling or Labeling' - Labeling the object of the propaganda campaign as either something the target audience fears, hates, finds undesirable or loves, praises.\n\n'Repetition' - Repeating the same message over and over again so that the audience will eventually accept it.\n\n'Slogans' - A brief and striking phrase that may include labeling and stereotyping. Slogans tend to act as emotional appeals.\n\n'Thought-terminating Cliches' - Words or phrases that discourage critical thought and meaningful discussion about a given topic. They are typically short, generic sentences that offer seemingly simple answers to complex questions or that distract attention away from other lines of thought.\n\n'Whataboutism or Straw Man or Red Herring' - A technique that attempts to discredit an opponent's position by charging them with hypocrisy without directly disproving their argument, when an opponent's proposition is substituted with a similar one which is then refuted in place of the original proposition or introducing irrelevant material to the issue being discussed, so that everyone's attention is diverted away from the points made.",
+            },
+            {
+                "role": "user",
+                "content": "In the following text identify which of these techniques are present in a sentence, it can be multiple or none. Enclose the found techniques in each sentence in square brackets imitating input for Python list. Separate the techniques with a comma, put parentheses around each found technique, e.g. ['Flag-Waving',  'Loaded Language'] or None if no technique is found.",
+            },
+            {
+                "role": "assistant",
+                "content": "Okay, I understand. I will either return a list containing the found techniques or None. For multiple sentences a will return a combination of lists and None delimited by commas.",
+            },
+            {
+                "role": "user",
+                "content": "The global economy would plunge into chaos, with skyrocketing fuel prices, widespread unemployment, and a devastating blow to industries heavily reliant on oil.",
+            },
+            {"role": "assistant", "content": "['Appeal to Fear Prejudice']"},
+            {
+                "role": "user",
+                "content": "Democrats bolted as soon as Trump's speech ended in an apparent effort to signal they can't even stomach being in the same room as the president.",
+            },
+            {
+                "role": "assistant",
+                "content": "['Exaggeration or Minimisation', 'Loaded Language']",
+            },
+            {
+                "role": "user",
+                "content": "By banning oil, they aim to cripple not only their adversaries but also their allies, leaving them at the mercy of their own agenda.",
+            },
+            {
+                "role": "assistant",
+                "content": "['Exaggeration or Minimisation']",
+            },
+            {
+                "role": "user",
+                "content": "Together, we can expose America's true intentions and safeguard the world from their manipulative grasp.",
+            },
+            {
+                "role": "assistant",
+                "content": "['Appeal to Fear Prejudice']",
+            },
+            {
+                "role": "user",
+                "content": "This is a car.",
+            },
+            {
+                "role": "assistant",
+                "content": "None",
+            },
+            {
+                "role": "user",
+                "content": "Our vast reserves and unwavering determination will ensure that the global oil market remains stable and prosperous.",
+            },
+            {
+                "role": "assistant",
+                "content": "['Loaded Language']",
+            },
+            {"role": "user", "content": prompt},
+        ]
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=messages,
+            temperature=0,  # this is the degree of randomness of the model's output
+        )
+        used_tokens = response["usage"]["total_tokens"]
+        response = response.choices[0].message["content"]
 
-    # de-stringify stringified list
-    propaganda_techniques = ast.literal_eval(response.choices[0].message["content"])
-    # TODO: try to avoid using literal_eval. I tried to use json.loads() instead of ast.literal_eval() but it didn't
-    #  work.
+    else:
+        prompt = f""" classify the sentence delimited by triple backticks into the following list of classes:
+                     ‘Appeal to Authority’, ‘Appeal to Fear Prejudice’,‘Bandwagon, Reductio ad hitlerum’,' Black and White Fallacy’, \
+                     ‘Causal Oversimplification’, ‘Doubt’, ‘Exaggeration, Minimisation’, ‘Flag-Waving’, ‘Loaded Languag’, \
+                     ‘Name Calling, Labeling’, ‘Repetition’, ‘Slogans’, ‘Thought-terminating Cliches’, \
+                     ‘Whataboutism, Straw Man, Red Herring’ \
+                     If no class was classified, assign the sentence the 'None' class.
+                     As an output, give me a python dictionary with the following keys:
+                     1. 'classes' where all the classes are saved as an array
+                     2. 'confidence' where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. The 'None' \
+                        the 'None' class should be assign a 0 by default.
+                     3. 'explain' where an explaination is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
+                      ```{prompt}````
+           """
+        message = [{"role": "user", "content": prompt}]
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=message,
+            temperature=0,  # this is the degree of randomness of the model's output
+        )
+        used_tokens = response["usage"]["total_tokens"]
+        response = response.choices[0].message["content"]
 
-    tokens_used = response["usage"]["total_tokens"]
+    return response, used_tokens
+
 
     return propaganda_techniques, tokens_used
