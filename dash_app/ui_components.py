@@ -111,8 +111,26 @@ column_input_analyse = dmc.Center(
             children=[
                 dmc.Group(
                     children=[
+                        dmc.Tooltip(
+                            multiline=True,
+                            withArrow=True,
+                            width=320,
+                            transition="fade",
+                            transitionDuration=200,
+                            label="Paste a text, click 'Submit Text' and let the PropagandaBot identify whether it "
+                                  "contains any techniques typical for propaganda. At first, you can try playing "
+                                  "around with some examples by clicking 'Try Example'.",
+                            children=[DashIconify(
+                                icon="heroicons:question-mark-circle-20-solid",
+                                color="#DEDEDE",
+                                width=25,
+                                style={"position": "relative", "marginLeft": 0}
+                            )],
+                        ),
                         dbc.Textarea(
                             id="input-text_to_analyze",
+                            maxlength=1300,
+                            valid=False,
                             placeholder="Type or paste text here...",
                             style={"width": 500, "position": "relative"},
                         ),
@@ -147,7 +165,8 @@ container_analysis_results = dcc.Loading(
         dmc.Grid(
             id="container-all_analysis",
             gutter="xl",
-            style={"opacity": 0, "visibility": "hidden", "height": "50vh"},
+            # style={"opacity": 0, "visibility": "hidden", "height": "50vh"},
+            style={"opacity": 0, "visibility": "hidden"},
             children=[
                 dmc.Tooltip(
                     multiline=True,
@@ -155,14 +174,14 @@ container_analysis_results = dcc.Loading(
                     width=320,
                     transition="fade",
                     transitionDuration=200,
-                    label="The highlighted sentences represent the sentences with highest confidence score of"
+                    label="The highlighted sentences represent the sentences with the highest confidence score of"
                           " propaganda techniques identification. You can click these sentences and see in the"
-                          " right panel which propaganda techniques were found in a sentence and why were identified"
-                          " as a part of the sentence.",
+                          " right panel which propaganda techniques were found in a sentence and why were they"
+                          " identified as a part of the sentence.",
                     children=[DashIconify(
                         icon="heroicons:question-mark-circle-20-solid",
                         color="#DEDEDE",
-                        width=35,
+                        width=25,
                         style={"position": "absolute", "marginLeft": 0}
                     )],
                 ),
@@ -186,9 +205,8 @@ container_analysis_results = dcc.Loading(
                                     width=220,
                                     transition="fade",
                                     transitionDuration=200,
-                                    label="Find out the explanations of why the above techniques"
-                                          " were identified in the sentence. The explanations are underlined"
-                                          " with color matching the color of the technique.",
+                                    label="Find out the techniques identified in a given sentence. Hover over these"
+                                          " techniques to see their definitions.",
                                     children=[DashIconify(
                                         icon="heroicons:question-mark-circle-20-solid",
                                         # color="red",
@@ -273,10 +291,6 @@ left_jumbotron = dbc.Col(
         [
             html.H4("Wonder how a neutral version would look like?"),
             html.Hr(className="my-2"),
-            # html.P(
-            #     "Or, keep it light and add a border for some added definition "
-            #     "to the boundaries of your content."
-            # ),
             dbc.Button("Neutralize and compare", color="secondary", outline=True),
         ],
         className="p-5 m-2  bg-light border rounded-3",
@@ -289,11 +303,11 @@ left_jumbotron = dbc.Col(
 footer = dmc.Container(
     children=[
         dmc.Footer(
-        height=100,
-        fixed=False,
+        id="footer",
+        height=110,
+        fixed=True,
         withBorder=False,
         children=[
-                # dmc.Space(h=145),
                 dmc.Center(
                     children=[
                         dmc.Anchor(
@@ -327,5 +341,5 @@ footer = dmc.Container(
             ]
         )
     ],
-    style={"position": "relative", "bottom": 0}
+    style={"position": "relative", "bottom": 0, "top": 30}
 )
