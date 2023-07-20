@@ -36,7 +36,7 @@ dash.register_page(__name__, path="/analyse")
 # TODO / NOTE: so far this is the only example of cached data, this is the data Christian provided, but it is manually
 #  edited so it only contains a few highlighted sentences...
 # TODO: change this to work with dictionaries, NOT PANDAS DATAFRAME!! - my mistake...
-df = pd.read_csv("data_chris_edited.csv")
+df = pd.read_csv("dash_app/data_chris_edited.csv")
 
 # --- PAGE LAYOUT
 layout = [

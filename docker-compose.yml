@@ -1,3 +1,5 @@
+# --- Production docker compose file
+
 # From this file's parent directory, execute:
 # $ docker compose -f docker-compose.yml build --no-cache
 # to build container images, and
