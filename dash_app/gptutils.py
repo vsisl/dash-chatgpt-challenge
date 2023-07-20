@@ -4,10 +4,12 @@ Functions making openAI API calls.
 import ast
 import json
 import openai  # chat-gpt API
+from dash_app.flask_cache import cache
 
 openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
 
 
+@cache.memoize(timeout=7 * 24 * 3600)
 def get_completion(prompt, model="gpt-3.5-turbo"):
     """Creates chatGPT response for a given prompt.
 
@@ -198,6 +200,7 @@ def get_classification_cheaper(sentence, model="gpt-3.5-turbo"):
     return propaganda_techniques, tokens_used
 
 
+@cache.memoize(timeout=7 * 24 * 3600)
 def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     """Takes given sentence and classifies it based on presence of propaganda techniques.
 
@@ -219,7 +222,7 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
                          ‘Whataboutism, Straw Man, Red Herring’ \
                          If no class was classified, assign the sentence the 'None' class.
                          As an output, give me a python dictionary with the following keys:
-                         1. 'classes' where all the classes are saved as an array
+                         1. 'classes' where all the classes are saved as a list
                          2. 'confidence' where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. The 'None' \
                             the 'None' class should be assign a 0 by default.
                          3. 'explain' where an explaination is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
