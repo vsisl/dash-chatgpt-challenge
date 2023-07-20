@@ -239,6 +239,9 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     except json.decoder.JSONDecodeError:
         # if json fails try literal eval
         classification_result = ast.literal_eval(response.choices[0].message["content"])
+    except:
+        pass
+        # TODO: make sure the function always returns something reasonable
 
     used_tokens = response["usage"]["total_tokens"]
 
