@@ -46,8 +46,6 @@ layout = dbc.Container(
     suppress_callback_exceptions=True,
 )
 def process_text(n_clicks, input_text):
-    print("callback fired...")
-
     # what do we want chatGPT to do?
     prompt = f"""
         Write the text delimited by triple backticks \
@@ -55,15 +53,47 @@ def process_text(n_clicks, input_text):
         Write the text in English.
         ```{input_text}```
         """
-    output_text = get_completion(prompt)
+    output_text, output_tokens = get_completion(prompt)
 
-    print(output_text)
+    # --- for debugging to save some API calls...
+    # output_text = """BREAKING NEWS: Russian Propaganda Exposed!
+    #
+    #                 In a shocking revelation, evidence has emerged exposing the Russian government's involvement in spreading propaganda. This sinister plot aims to manipulate public opinion and sow discord among nations. The truth has finally come to light, revealing the extent of Russia's deceptive tactics.
+    #
+    #                 Through a thorough investigation, it has been discovered that the Russian government has been using various platforms to disseminate false information, creating confusion and chaos. This calculated strategy aims to undermine the stability and unity of democratic societies worldwide.
+    #
+    #                 Experts have identified a network of trolls and bots, operated by the Russian government, which have been actively spreading disinformation and engaging in online manipulation. These malicious actors have been targeting vulnerable individuals and exploiting their fears and biases to further their own agenda.
+    #
+    #                 The consequences of this propaganda campaign are far-reaching. It has not only affected elections and political processes but has also fueled tensions between nations, leading to increased hostility and mistrust. The Russian government's actions have jeopardized global peace and security.
+    #
+    #                 World leaders and international organizations are now calling for a united front against this propaganda war. Efforts are being made to expose and counteract Russia's deceptive tactics, ensuring that the truth prevails over manipulation.
+    #
+    #                 As the world becomes more aware of Russia's propaganda machine, it is crucial for individuals to remain vigilant and discerning when consuming information. By questioning sources and verifying facts, we can collectively combat the spread of disinformation and protect the integrity of our societies.
+    #
+    #                 Stay tuned for more updates on this"""
+    # output_tokens = 0
+
+    # Experimental: generate image based on prompt
+    # prompt_img = f"""                                                                  # #
+    #     What is the main nomen in the text delimited by triple backticks? \            # #
+    #     If there is no noun, what is the main verb? \                                  # #
+    #     As an output just give me either the noun or the nominalisation of the verb. \ # #
+    #     No addition text, just one token.                                              # #
+    #     ```{input_text}```                                                             # #
+    #     """                                                                            # #
+    #                                                                                    # #
+    # img_text, img_tokens = get_completion(prompt_img)                                  # #
+    # print(output_text)                                                                 # #
+    # img = get_image(img_text)                                                            #
+    #
 
     sentences = extract_sentences(output_text)
-    print(output_text)
-    classified_sentences = classify_sentences(sentences)
 
-    output_children = render(len(sentences), classified_sentences)
+    classified_sentences, ranking, n_tokens = classify_sentences(sentences)
+    # caution: ranking starts with the lowest
+    n_tokens += output_tokens
+
+    output_children = render(classified_sentences)
 
     return (
         output_children,
