@@ -207,7 +207,8 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     :param model: str; optional, default: "gpt-3.5-turbo"
     :return: response: dict; contains the following key-value pairs:
                                 'classes': list of str; list of propaganda techniques
-                                'confidence': list of numerical values; confidence index for each propaganda technique
+                                'confidence': list of numerical values between 0 and 1; confidence score for each
+                                              propaganda technique
                                 'explain': list of str; explanations why given propaganda techniques were assigned
              used_tokens int: total API call tokens used by this function call
     """
