@@ -6,7 +6,12 @@ import ast
 import numpy as np
 import pandas as pd
 from dash import html
-from dash_app.gptutils import get_completion, get_classification, get_classification_cheaper
+from dash_app.gptutils import (
+    get_completion,
+    get_classification,
+    get_classification_cheaper,
+    get_classification_christian,
+)
 
 # TODO: probably remove this - my initial thought was to use different colors for different techniques, but generally
 #       there are multiple techniques present in a sentence
@@ -71,19 +76,60 @@ def extract_sentences(text):
 
 
 def classify_sentences(sentences):
-    # Create an empty ndarray to store the sentences and their numbers
-    ary = np.empty((len(sentences), 2), dtype=object)
+    """Classifies given sentences for presence of propaganda techniques.
 
+    :param sentences: list of str; list of sentences to be classified;
+                        e.g. ['BREAKING NEWS: Russian Propaganda Exposed!',
+                              "In a shocking revelation, evidence has emerged exposing the Russian government's ..."]
+    :return: out dict: dict;
+                        e.g.
+                            {
+                                '0': {
+                                    'sentence': 'BREAKING NEWS: Russian Propaganda Exposed!',
+                                    'classes': ['Flag-Waving'],
+                                    'confidence': [1],
+                                    'explain': ['The sentence uses loaded language and exclamation marks to create a sense of urgency and patriotism, indicating a flag-waving technique.']
+                                },
+                                '1': {
+                                    'sentence': "In a shocking revelation, evidence has emerged exposing the Russian government's ...",
+                                    'classes': ['Appeal to Fear Prejudice'],
+                                    'confidence': [1],
+                                    'explain': ['The sentence uses loaded language ("shocking revelation") and appeals to fear by exposing the Russian government.']
+                                }
+                            }
+             best: numpy.ndarray TODO: explain
+             total_tokens: int; total API tokens used by this function call
+    """
+    out_dict = {}
+
+    confidence_ranking = np.zeros(len(sentences))
     # Iterate through the sentences and assign numbers
+    total_tokens = 0
     for i, sentence in enumerate(sentences):
-        what = ast.literal_eval(get_classification_cheaper(sentence))
-        print(what)
-        ary[i][0] = sentence
-        # ary[i][1] = ast.literal_eval(get_classification(sentence))
-        ary[i][1] = what
-        print(ary[i][0], ary[i][1])
+        # TODO: refactor
+        idx = str(i)  # strigified integer
+        out_dict[idx] = {}
 
-    return ary
+        # TODO: possibly add a boolean switch to be able to choose between
+        #  get_classification_christian() and
+        #  get_classification_cheaper()
+        classification_dict, tokens = get_classification_christian(sentence)
+        total_tokens += tokens
+
+        out_dict[idx] = {
+            "sentence": sentence,
+            "classes": classification_dict["classes"],
+            "confidence": classification_dict["confidence"],
+            "explain": classification_dict["explain"],
+        }
+
+        # find the highest propaganda score among all propaganda techniques for each sentence
+        confidence_ranking[i] = np.max(classification_dict["confidence"])
+
+    # find the highest propaganda score among all sentences
+    best = np.argsort(confidence_ranking)
+
+    return out_dict, best, total_tokens
 
 
 # corresponding style "hover-box" located in assets/custom.css
@@ -123,31 +169,44 @@ def style_box(children, title, idx):
 
 
 def entity(children, techniques, idx):
+    # TODO: add docstring
     name = ""
     title = ""
-    for technique_label in techniques:
-        title += technique_label + ","
-        name += term_to_abbreviation[technique_label] + ","
+
+    # if there are propaganda techniques in the given sentence, apply special styling
+    if techniques is not None:
+        for technique_label in techniques:
+            title += technique_label + ","
+            name += term_to_abbreviation[technique_label] + ","
 
     if type(children) is str:
         children = [children]
 
     children.append(style_name(name))
 
+    # TODO: fix a bug - function is highlighting also sentences that do not contain any propaganda techniques
+
     return style_box(children, title, idx)
 
 
-def render(length, ary):
+def render(classified_sentences):
+    # TODO: add docstring
     children = []
-    idx = 0
-    for i in range(length):
-        if ary[i][1] is None:
-            children.append(ary[i][0])
+
+    for i, sentence_dict in classified_sentences.items():
+        # if sentence does not contain any propaganda techniques, simply render it as is
+        if sentence_dict["classes"] is None:
+            children.append(sentence_dict["sentence"])
+
+        # if sentence contains propaganda techniques, apply special styling and add labels
         else:
-            labels = ary[i][1]
+            labels = sentence_dict["classes"]
             # children.append(entity(ary[i][0], term_to_abbreviation[labels[0]], idx))
-            children.append(entity(ary[i][0], labels, idx))
-            idx += 1
+            children.append(
+                entity(
+                    children=sentence_dict["sentence"], techniques=labels, idx=int(i)
+                )
+            )
 
     return children
 
