@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from dash import html
 from gptutils import get_completion, get_classification, get_classification_cheaper
+import dash_mantine_components as dmc
 
 # TODO: probably remove this - my initial thought was to use different colors for different techniques, but generally
 #       there are multiple techniques present in a sentence
@@ -49,6 +50,42 @@ term_to_abbreviation = {
 # Dictionary: abbreviation to technique name
 abbreviation_to_term = {v: k for k, v in term_to_abbreviation.items()}
 
+term_to_defintion = {
+    "Appeal to Authority": "Stating that a claim is true simply because a valid authority or expert on the issue said "
+                           "it was true, without any other supporting evidence offered.",
+    "Appeal to Fear Prejudice": "Seeking to build support for an idea by instilling anxiety and/or panic in the "
+                                "population towards an alternative.",
+    "Bandwagon, Reductio ad hitlerum": "Attempting to persuade the target audience to join in and take the course of "
+                                       "action because 'everyone else is taking the same action'",
+    "Black and White Fallacy": "Presenting two alternative options as the only possibilities, when in fact more "
+                               "possibilities exist. As an the extreme case, tell the audience exactly what actions"
+                               " to take, eliminating any other possible choices.",
+    "Causal Oversimplification": "Assuming a single cause or reason when there are actually multiple causes for an "
+                                 "issue.",
+    "Doubt": "Questioning the credibility of someone or something.",
+    "Exaggeration, Minimisation": "Either representing something in an excessive manner: making things larger, better, "
+                                  "worse (e.g., 'the best of the best', 'quality guaranteed') or making something seem"
+                                  " less important or smaller than it really is (e.g., saying that an insult was just "
+                                  "a joke). ",
+    "Flag-Waving": "Playing on strong national feeling (or to any group; e.g., race, gender, political preference) to"
+                   " justify or promote an action or idea.",
+    "Loaded Language": "Using specific words and phrases with strong emotional implications (either positive "
+                       "or negative) to influence an audience.",
+    "Name Calling or Labeling": "Labeling the object of the propaganda campaign as either something the target audience "
+                                "fears, hates, finds undesirable or loves, praises.",
+    "Repetition": "Repeating the same message over and over again so that the audience will eventually accept it.",
+    "Slogans": "A brief and striking phrase that may include labeling and stereotyping.",
+    "Thought-terminating Cliches": " Words or phrases that discourage critical thought and meaningful discussion about "
+                                   "a given topic. They are typically short, generic sentences that offer seemingly "
+                                   "simple answers to complex questions or that distract attention away from other "
+                                   "lines of thought.",
+    "Whataboutism or Straw Man or Red Herring": "A technique that attempts to discredit an opponent's position by "
+                                                "charging them with hypocrisy without directly disproving their "
+                                                "argument, when an opponent's proposition is substituted with a similar "
+                                                "one which is then refuted in place of the original proposition or "
+                                                "introducing irrelevant material to the issue being discussed, so "
+                                                "that everyone's attention is diverted away from the points made.",
+}
 
 def extract_sentences(text):
     """
@@ -123,17 +160,27 @@ def style_box(children, title, idx):
 
 
 def style_technique(technique):
-    return html.Mark(
-        technique,
-        style={
-            "padding": "7px",
-            "margin": "7px",
-            "line-height": "1",
-            "border-radius": "0.35em",
-            "background-color": DEFAULT_LABEL_COLORS[term_to_abbreviation[technique]],
-            "transition": "background-color 0.3s ease",
-            "cursor": "default",
-        },
+    return dmc.Tooltip(
+        multiline=True,
+        withArrow=True,
+        width=320,
+        transition="fade",
+        transitionDuration=200,
+        label=term_to_defintion[technique],
+        children=[
+            html.Mark(
+                technique,
+                style={
+                    "padding": "7px",
+                    "margin": "7px",
+                    "line-height": "1",
+                    "border-radius": "0.35em",
+                    "background-color": DEFAULT_LABEL_COLORS[term_to_abbreviation[technique]],
+                    "transition": "background-color 0.3s ease",
+                    "cursor": "default",
+                },
+            )
+        ]
     )
 
 
