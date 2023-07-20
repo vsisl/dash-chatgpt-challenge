@@ -120,7 +120,7 @@ def classify_sentences(sentences):
             "sentence": sentence,
             "classes": classification_dict["classes"],
             "confidence": classification_dict["confidence"],
-            "explain": classification_dict["explain"]
+            "explain": classification_dict["explain"],
         }
 
         # find the highest propaganda score among all propaganda techniques for each sentence
@@ -184,6 +184,8 @@ def entity(children, techniques, idx):
 
     children.append(style_name(name))
 
+    # TODO: fix a bug - function is highlighting also sentences that do not contain any propaganda techniques
+
     return style_box(children, title, idx)
 
 
@@ -192,16 +194,19 @@ def render(classified_sentences):
     children = []
 
     for i, sentence_dict in classified_sentences.items():
-
         # if sentence does not contain any propaganda techniques, simply render it as is
-        if sentence_dict['classes'] is None:
-            children.append(sentence_dict['sentence'])
+        if sentence_dict["classes"] is None:
+            children.append(sentence_dict["sentence"])
 
         # if sentence contains propaganda techniques, apply special styling and add labels
         else:
-            labels = sentence_dict['classes']
+            labels = sentence_dict["classes"]
             # children.append(entity(ary[i][0], term_to_abbreviation[labels[0]], idx))
-            children.append(entity(children=sentence_dict['sentence'], techniques=labels, idx=int(i)))
+            children.append(
+                entity(
+                    children=sentence_dict["sentence"], techniques=labels, idx=int(i)
+                )
+            )
 
     return children
 
