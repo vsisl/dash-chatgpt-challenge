@@ -245,7 +245,37 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     if type(classification_result) is not dict:
         raise TypeError(f"Response is not a dictionary.")
 
-    if not any(key in classification_result.keys() for key in ["classes", "confidence", "explain"]):
+    # check that the dictionary returned by GPT has expected keys
+    if not any(
+        key in classification_result.keys()
+        for key in ["classes", "confidence", "explain"]
+    ):
         raise ValueError(f"Response does not contain the expected keys.")
+
+    # make sure that all propaganda techniques identified by the classifier are among the expected options
+    if classification_result["classes"] is not None:
+        # Note: We had a case when the value of classification_result['classes'] was ['Appeal to Authority', 'None']
+        #  the 'None' value was not supposed to be there and caused the function entity() to crash...
+        for technique in classification_result["classes"]:
+            # TODO: store a list of all supported techniques in some separate module
+            if technique not in [
+                "Appeal to Authority",
+                "Appeal to Fear Prejudice",
+                "Bandwagon, Reductio ad hitlerum",
+                " Black and White Fallacy",
+                "Causal Oversimplification",
+                "Doubt",
+                "Exaggeration, Minimisation",
+                "Flag-Waving",
+                "Loaded Languag",
+                "Name Calling, Labeling",
+                "Repetition",
+                "Slogans",
+                "Thought-terminating Cliches",
+                "Whataboutism, Straw Man, Red Herring",
+            ]:
+                classification_result["classes"].remove(technique)
+
+    # TODO: implement further data validation
 
     return classification_result, used_tokens
