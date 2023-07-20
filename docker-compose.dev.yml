@@ -1,0 +1,38 @@
+# --- Development docker compose file
+
+version: '3.4'
+
+networks:
+  dash_chatgpt-dev-network:
+
+services:
+  redis:
+    container_name: dash_chatgpt_challenge-dev-redis
+    image: redis
+    networks:
+      - dash_chatgpt-dev-network
+    restart: unless-stopped
+
+  dash_app:
+    container_name: dash_chatgpt_challenge-dev-dash_app
+    image: vsisl/dash_chatgpt_challenge:dev
+    build:
+      context: .
+      dockerfile: dash_app/Dockerfile
+    networks:
+      - dash_chatgpt-dev-network
+    ports:
+      - 5001:80
+    environment:
+      - PYTHONUNBUFFERED=1
+      - REDISTOGO_URL=redis://redis:6379
+    depends_on:
+      - redis
+    logging:
+      driver: json-file
+      options:
+        max-file: '10'
+        max-size: '200k'
+    restart: unless-stopped
+    volumes:
+      - ../dash-chatgpt-challenge:/home/docker/dash-chatgpt-challenge

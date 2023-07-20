@@ -7,7 +7,7 @@ A web app based on the plotly-dash framework developed to participate the [Dash-
 
 #### Development environment
 ```bash
-$ 
+$ docker compose -f docker-compose.dev.yml up
 ```
 
 
