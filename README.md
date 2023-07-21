@@ -30,7 +30,13 @@ $ docker compose -f docker-compose.yml up
     $ conda activate dash_chatgpt
     ```
    
-3) Run the app (for development purposes only):
+3) Run redis database (using docker): 
+
+   ```bash
+    $ docker run -p 6379:6379 --rm redis
+    ```
+    
+4) Run the app:
 
     ```bash
     $ python dash_app/app.py
