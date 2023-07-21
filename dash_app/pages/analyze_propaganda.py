@@ -72,8 +72,8 @@ def process_example(n_clicks_1, n_clicks_2, input_text):
 
         classified_sentences, ranking, n_tokens = classify_sentences(sentences)
     else:
-        classified_sentences = np.load('/home/jan/PycharmProjects/dash-chatgpt-challenge/dash_app/data/example_0.npy', allow_pickle=True).item()
-        ranking = np.load('/home/jan/PycharmProjects/dash-chatgpt-challenge/dash_app/data/example_0_ranking.npy', allow_pickle=True)
+        classified_sentences = np.load('data/example_0.npy', allow_pickle=True).item()
+        ranking = np.load('data/example_0_ranking.npy', allow_pickle=True)
         # sleep some time to show Putin loading
         time.sleep(2)
 
