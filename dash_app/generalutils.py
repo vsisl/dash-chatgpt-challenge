@@ -19,18 +19,18 @@ import dash_mantine_components as dmc
 DEFAULT_LABEL_COLORS = {
     "AtA": "#7aecec",
     "AtFP": "#bfeeb7",
-    "BoRaH": "#feca74",
+    "BRaH": "#feca74",
     "BaWF": "#ff9561",
     "CO": "#aa9cfc",
     "D": "#c887fb",
-    "EoM": "#9cc9cc",
+    "EM": "#9cc9cc",
     "FW": "#ffeb80",
     "LL": "#ff8197",
-    "NCoL": "#ff8197",
+    "NCL": "#ff8197",
     "R": "#f0d0ff",
     "S": "#bfe1d9",
     "TtC": "#bfe1d9",
-    "WoSMoRH": "#e4e7d2",
+    "WSMRH": "#e4e7d2",
 }
 
 
@@ -38,18 +38,18 @@ DEFAULT_LABEL_COLORS = {
 term_to_abbreviation = {
     "Appeal to Authority": "AtA",
     "Appeal to Fear Prejudice": "AtFP",
-    "Bandwagon, Reductio ad hitlerum": "BoRaH",
+    "Bandwagon, Reductio ad hitlerum": "BRaH",
     "Black and White Fallacy": "BaWF",
     "Causal Oversimplification": "CO",
     "Doubt": "D",
-    "Exaggeration, Minimisation": "EoM",
+    "Exaggeration, Minimisation": "EM",
     "Flag-Waving": "FW",
     "Loaded Language": "LL",
-    "Name Calling or Labeling": "NCoL",
+    "Name Calling, Labeling": "NCL",
     "Repetition": "R",
     "Slogans": "S",
     "Thought-terminating Cliches": "TtC",
-    "Whataboutism or Straw Man or Red Herring": "WoSMoRH",
+    "Whataboutism, Straw Man, Red Herring": "WSMRH",
 }
 
 # Dictionary: abbreviation to technique name
@@ -144,7 +144,7 @@ def classify_sentences(sentences):
     total_tokens = 0
     for i, sentence in enumerate(sentences):
         # TODO: refactor
-        idx = str(i)  # strigified integer
+        idx = str(i)  # stringified integer
         out_dict[idx] = {}
 
         # TODO: possibly add a boolean switch to be able to choose between
@@ -286,20 +286,33 @@ def render(classified_sentences):
     return children
 
 
-# TODO: make this the only render function
-# TODO: change this to work with dictionaries, NOT PANDAS DATAFRAME!!
-# used in the analysis part to generate highlighted and not highlighted text
-def render_new_dataformat(df):
+def render_dict(input_dictionary, ranking=None):
+    # TODO: add docstring
     children = []
-    idx = 0
-    for i, row in df.iterrows():
-        if pd.isna(row["classes"]):
-            children.append(row["sentence"])
-        else:
-            labels = ast.literal_eval(row["classes"])
-            children.append(entity(row["sentence"], labels, idx))
-            idx += 1
 
-    print(children)
+    for idx, values in input_dictionary.items():
+        # if sentence does not contain any propaganda techniques, simply render it as is
+        if values["classes"] is None or values["classes"] == []:
+            children.append(values["sentence"])
+        elif ranking is not None:
+            last_five_elements = ranking[-5:]
+            is_in_last_five = np.isin(int(idx), last_five_elements)
+            if not is_in_last_five:
+                children.append(values["sentence"])
+            else:
+                labels = values["classes"]
+                children.append(
+                    entity(
+                        children=values["sentence"], techniques=labels, idx=int(idx)
+                    )
+                )
+        # if sentence contains propaganda techniques, apply special styling and add labels
+        else:
+            labels = values["classes"]
+            children.append(
+                entity(
+                    children=values["sentence"], techniques=labels, idx=int(idx)
+                )
+            )
 
     return children
