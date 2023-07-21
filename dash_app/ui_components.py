@@ -128,7 +128,7 @@ column_input_analyse = dmc.Center(
                             )],
                         ),
                         dbc.Textarea(
-                            id="input-text_to_analyze",
+                                id="input-text_to_analyze",
                             maxlength=1300,
                             valid=False,
                             placeholder="Type or paste text here...",
@@ -139,6 +139,7 @@ column_input_analyse = dmc.Center(
                             id="button-submit-original",
                             color="red",
                             style={"height": 66},
+                            n_clicks=0,
                         ),
                         dmc.Text(
                             "or",
@@ -149,6 +150,7 @@ column_input_analyse = dmc.Center(
                             id="button-try-example",
                             color="blue",
                             style={"height": 66},
+                            n_clicks=0,
                         ),
                     ]
                 )
@@ -284,7 +286,7 @@ column_neutral = dbc.Col(
     width=6,
 )
 
-hidden_div = html.Div(id="hidden-div", style={"display": "none"})
+hidden_comp = dcc.Store(id="hidden-comp")
 
 left_jumbotron = dbc.Col(
     html.Div(
