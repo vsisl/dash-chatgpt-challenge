@@ -1,29 +1,22 @@
 """Generate propaganda article on a given topic
 """
-import ast
-
 import dash
 import time
 import numpy as np
-import pandas as pd
 import json
-from dash import Input, Output, State, html, callback, dcc, ALL
+from dash import Input, Output, State, callback, ALL
 import dash_bootstrap_components as dbc
 from dash_app.generalutils import (
     get_completion,
     extract_sentences,
     classify_sentences,
-    render,
-    render_new_dataformat,
     style_technique,
     style_explanation,
+    render_dict,
 )
 from dash_app.ui_components import (
     column_input_analyse,
-    column_output,
-    column_neutral,
-    column_sentence_info,
-    left_jumbotron,
+    hidden_comp,
     title,
     container_analysis_results,
     call_to_action,
@@ -33,11 +26,6 @@ from dash_app.ui_components import (
 
 dash.register_page(__name__, path="/analyse")
 
-# TODO / NOTE: so far this is the only example of cached data, this is the data Christian provided, but it is manually
-#  edited so it only contains a few highlighted sentences...
-# TODO: change this to work with dictionaries, NOT PANDAS DATAFRAME!! - my mistake...
-df = pd.read_csv("dash_app/data_chris_edited.csv")
-
 # --- PAGE LAYOUT
 layout = [
     dbc.Container(
@@ -46,115 +34,93 @@ layout = [
             dbc.Row([column_input_analyse]),
             dbc.Row([container_analysis_results]),
             dbc.Row([call_to_action]),
+            hidden_comp
         ],
     ),
     dbc.Container([footer]),
 ]
-
 
 @callback(
     Output(component_id="analysis_results-container", component_property="children"),
     Output(component_id="container-all_analysis", component_property="style"),
     Output(component_id="footer", component_property="fixed"),
     Output(component_id="call-to-action", component_property="style"),
+    Output(component_id="hidden-comp", component_property="data"),
+    Input(component_id="button-submit-original", component_property="n_clicks"),
     Input(component_id="button-try-example", component_property="n_clicks"),
+    State(component_id="input-text_to_analyze", component_property="value"),
     prevent_initial_call=True,  # this prevents callback triggering at page load (before the Submit button is clicked)
     suppress_callback_exceptions=True,
 )
-def process_example(n_clicks):
+def process_example(n_clicks_1, n_clicks_2, input_text):
     call_to_action_style = {"opacity": 0, "visibility": "hidden", "marginTop": 16}
-    if n_clicks > 1:
+
+    ctx = dash.callback_context
+    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print(button_id)
+
+    if n_clicks_1 + n_clicks_2 > 1:
         call_to_action_style = {
             "opacity": 1,
             "visibility": "visible",
             "marginTop": 16,
             "transition": "opacity 1.0s ease",
         }
-    # TODO: distinguish between Try Example and Submit Text - only the second one works now and it works incorrectly, it
-    #  always loads a polished
-    output_text = render_new_dataformat(df)
-    # sleep some time to show Putin loading
-    time.sleep(1)
-    return output_text, {
-        "opacity": 1,
-        "visibility": "visible",
-        "transition": "opacity 1.0s ease",
-        "min-height": 400,
-    }, False, call_to_action_style
 
+    if button_id == "button-submit-original":
+        sentences = extract_sentences(input_text)
 
-# @callback(
-#     Output(component_id="analysis_results-container", component_property="children"),
-#     Output(component_id="container-all_analysis", component_property="style"),
-#     Output(component_id="call-to-action", component_property="style"),
-#     Input(component_id="button-submit-original", component_property="n_clicks"),
-#     State(component_id="input-text_to_analyze", component_property="value"),
-#     prevent_initial_call=True,  # this prevents callback triggering at page load (before the Submit button is clicked)
-#     suppress_callback_exceptions=True,
-# )
-# def process_original(n_clicks, input_text):
-#     call_to_action_style = {"opacity": 0, "visibility": "hidden", "marginTop": 16}
-#     if n_clicks > 1:
-#         call_to_action_style = {
-#             "opacity": 1,
-#             "visibility": "visible",
-#             "marginTop": 16,
-#             "transition": "opacity 1.0s ease",
-#         }
-#
-#     # what do we want chatGPT to do?
-#     prompt = f"""
-#         Write the text delimited by triple backticks \
-#         in form of a really short russian propaganda breaking news. \
-#         Write the text in English.
-#         ```{input_text}```
-#         """
-#     output_text, output_tokens = get_completion(prompt)
-#     sentences = extract_sentences(output_text)
-#     output_text = render_new_dataformat(df)
-#     # sleep some time to show Putin loading
-#     time.sleep(1)
-#     return output_text, {
-#         "opacity": 1,
-#         "visibility": "visible",
-#         "transition": "opacity 1.0s ease",
-#         "min-height": 400,
-#     }, call_to_action_style
+        classified_sentences, ranking, n_tokens = classify_sentences(sentences)
+    else:
+        classified_sentences = np.load('/home/jan/PycharmProjects/dash-chatgpt-challenge/dash_app/data/example_0.npy', allow_pickle=True).item()
+        ranking = np.load('/home/jan/PycharmProjects/dash-chatgpt-challenge/dash_app/data/example_0_ranking.npy', allow_pickle=True)
+        # sleep some time to show Putin loading
+        time.sleep(2)
 
+    # caution: ranking starts with the lowest
+    output_text = render_dict(classified_sentences, ranking=ranking)
+
+    return \
+        output_text, \
+        {
+            "opacity": 1,
+            "visibility": "visible",
+            "transition": "opacity 1.0s ease",
+            "min-height": 400,
+        }, \
+        False,\
+        call_to_action_style,\
+        classified_sentences
 
 @callback(
     Output(component_id="found-techniques", component_property="children"),
     Output(component_id="explanation", component_property="children"),
+    Input(component_id="hidden-comp", component_property="data"),
     Input({"type": "mark", "index": ALL}, "n_clicks"),
     State({"type": "mark", "index": ALL}, "children"),
     prevent_initial_call=True,
 )
-def display_mark_info(n_clicks, mark_values):
+def display_mark_info(content, n_clicks, mark_values):
     ctx = dash.callback_context
     if not ctx.triggered:
         return "", ""
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
         mark_index = json.loads(button_id)["index"]
-        out = df.loc[df["sentence"] == mark_values[mark_index][0]]
 
-        string_with_techniques = out["classes"].values[0]
-        list_of_techniques = ast.literal_eval(string_with_techniques)
+        if content[str(mark_index)]["classes"] == ['']:
+            return " ", " "
+        techniques = content[str(mark_index)]["classes"]
 
         techniques_children = []
-        for i, technique in enumerate(list_of_techniques):
+        for i, technique in enumerate(techniques):
             techniques_children.append(style_technique(technique))
-            # TODO: why is the following not needed anymore? It changed when I wrapped the techniques in dmc.Tooltip
-            # if i != len(list_of_techniques) - 1:
-            #     techniques_children.append(html.Br())
 
-        string_with_explanation = out["explain"].values[0]
-        explanation = ast.literal_eval(string_with_explanation)
+        explanation = content[str(mark_index)]["explain"]
 
         explanation_children = [
             style_explanation(expl, technique)
-            for expl, technique in zip(explanation, list_of_techniques)
+            for expl, technique in zip(explanation, techniques)
         ]
 
         return techniques_children, explanation_children
-
