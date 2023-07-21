@@ -214,7 +214,7 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     """
     prompt = f""" classify the sentence delimited by triple backticks into the following list of classes:
                          ‘Appeal to Authority’, ‘Appeal to Fear Prejudice’,‘Bandwagon, Reductio ad hitlerum’,' Black and White Fallacy’, \
-                         ‘Causal Oversimplification’, ‘Doubt’, ‘Exaggeration, Minimisation’, ‘Flag-Waving’, ‘Loaded Languag’, \
+                         ‘Causal Oversimplification’, ‘Doubt’, ‘Exaggeration, Minimisation’, ‘Flag-Waving’, ‘Loaded Language’, \
                          ‘Name Calling, Labeling’, ‘Repetition’, ‘Slogans’, ‘Thought-terminating Cliches’, \
                          ‘Whataboutism, Straw Man, Red Herring’ \
                          If no class was classified, assign the sentence the 'None' class.
@@ -222,7 +222,7 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
                          1. 'classes' where all the classes are saved as an array
                          2. 'confidence' where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. The 'None' \
                             the 'None' class should be assign a 0 by default.
-                         3. 'explain' where an explaination is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
+                         3. 'explain' where an explanation is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
                           ```{sentence}````
                """
     message = [{"role": "user", "content": prompt}]
@@ -266,12 +266,12 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
                 "Appeal to Authority",
                 "Appeal to Fear Prejudice",
                 "Bandwagon, Reductio ad hitlerum",
-                " Black and White Fallacy",
+                "Black and White Fallacy",
                 "Causal Oversimplification",
                 "Doubt",
                 "Exaggeration, Minimisation",
                 "Flag-Waving",
-                "Loaded Languag",
+                "Loaded Language",
                 "Name Calling, Labeling",
                 "Repetition",
                 "Slogans",
