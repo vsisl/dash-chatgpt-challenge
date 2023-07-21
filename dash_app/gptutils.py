@@ -216,15 +216,15 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
              used_tokens int: total API call tokens used by this function call
     """
     prompt = f""" classify the sentence delimited by triple backticks into the following list of classes:
-                         "Appeal to Authority", "Appeal to Fear Prejudice","Bandwagon, Reductio and hitlerum","Black and White Fallacy", \
+                         "Appeal to Authority", "Appeal to Fear Prejudice", "Bandwagon, Reductio ad hitlerum", "Black and White Fallacy", \
                          "Causal Oversimplification", "Doubt", "Exaggeration, Minimisation", "Flag-Waving", "Loaded Language", \
-                         "Name Calling, Labeling", ‘Repetition", "Slogans", "Thought-terminating Cliches", \
+                         "Name Calling, Labeling", "Repetition", "Slogans", "Thought-terminating Cliches", \
                          "Whataboutism, Straw Man, Red Herring" \
                          As an output, give me a python dictionary with the following keys:
-                         1. "classes" where all the classes are saved as a list. Use only the classes provided at the beginning with the exact spelling. If no class was classified, leave, leave it empty.
+                         1. "classes" where all the classes are saved as a list. Use only the classes provided at the beginning with the exact spelling. If no class was classified, instead of a list return None.
                          2. "confidence" where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. \
-                             Just give me an array as output where the order correponds to the order of the classes.  If no class was classified, the array consists only of a single value, which is 0. \
-                         3. "explain" where an explaination is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
+                             Just give me a list as output where the order corresponds to the order of the classes. If no class was classified, instead of a list return None. \
+                         3. "explain" where an explanation is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If no class was classified, instead of a list return None.
                           ```{sentence}````
                """
     message = [{"role": "user", "content": prompt}]
@@ -258,39 +258,50 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     ):
         raise ValueError(f"Response does not contain the expected keys.")
 
+    # make sure the returned data structures are either lists or None values
+    for param in ["classes", "confidence", "explain"]:
+        if type(classification_result[param]) not in [list, None]:
+            raise TypeError(f"Unexpected type: {classification_result}")
+
+    # make sure data types are consistent (all are the same type - either list or None)
+    nr_of_types = len(set(map(type, [var for var in classification_result.values()])))
+    if nr_of_types != 1:
+        raise TypeError(f"Inconsistent data types: {classification_result}")
+
     # make sure that all propaganda techniques identified by the classifier are among the expected options
     if classification_result["classes"] is not None:
         # Note: We had a case when the value of classification_result['classes'] was ['Appeal to Authority', 'None']
         #  the 'None' value was not supposed to be there and caused the function entity() to crash...
         #  If technique is not found in the list of techniques, we need to remove also the score and explaination.
-        idx = -1
-        for technique in classification_result["classes"]:
+
+        for i, technique in enumerate(classification_result["classes"]):
             # TODO: store a list of all supported techniques in some separate module
-            idx += 1
             if technique not in [
                 "Appeal to Authority",
                 "Appeal to Fear Prejudice",
-                "Bandwagon, Reductio and hitlerum",
-                " Black and White Fallacy",
+                "Bandwagon, Reductio ad hitlerum",
+                "Black and White Fallacy",
                 "Causal Oversimplification",
                 "Doubt",
                 "Exaggeration, Minimisation",
                 "Flag-Waving",
-                "Loaded Languag",
+                "Loaded Language",
                 "Name Calling, Labeling",
                 "Repetition",
                 "Slogans",
                 "Thought-terminating Cliches",
                 "Whataboutism, Straw Man, Red Herring",
             ]:
-                classification_result["classes"].remove(technique)
-                classification_result["explain"] = np.delete(classification_result["explain"],idx)
-                # special case if technique = 'None' class => confidence needs to have a nunmerical value otherwise the np.argmin fails
-                # if it is the only class
-                if technique =='None':
-                    classification_result["confidence"][idx] = 0
-                else:
-                    classification_result["confidence"] = np.delete(classification_result["confidence"],idx)
+                # if technique is not from the list of supported options, remove it
+                classification_result["classes"].pop(i)
+                classification_result["confidence"].pop(i)
+                classification_result["explain"].pop(i)
+
+                # if there are no techniques left, assign None values (instead of empty lists)
+                if len(classification_result["classes"]) == 0:
+                    classification_result["classes"] = None
+                    classification_result["confidence"] = None
+                    classification_result["explain"] = None
 
     # TODO: implement further data validation
 
