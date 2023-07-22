@@ -4,49 +4,55 @@ import dash
 import time
 import numpy as np
 import json
-from dash import Input, Output, State, html, callback, dcc, ALL
+from dash import Input, Output, State, callback, ALL
 import dash_bootstrap_components as dbc
 from dash_app.generalutils import (
     get_completion,
     extract_sentences,
     classify_sentences,
+    style_technique,
+    style_explanation,
     render,
 )
 from dash_app.ui_components import (
-    column_input,
-    column_output,
-    column_neutral,
-    column_sentence_info,
-    left_jumbotron,
+    column_input_generate,
+    hidden_comp_generation,
+    title_generate,
+    container_generation_results,
+    footer_generation,
+    header,
 )
-
 
 dash.register_page(__name__, path="/generate")
 
 # --- PAGE LAYOUT
-layout = dbc.Container(
-    children=[
-        dbc.Row([column_input]),
-        dbc.Row([column_output, column_sentence_info]),
-        dbc.Row([left_jumbotron]),
-    ]
-)
+layout = [
+    dbc.Container([header]),
+    dbc.Container(
+        children=[
+            dbc.Row([title_generate]),
+            dbc.Row([column_input_generate]),
+            dbc.Row([container_generation_results]),
+            hidden_comp_generation
+        ],
+    ),
+    dbc.Container([footer_generation]),
+]
 
 
 # --- CALLBACKS
 
-
 @callback(
-    Output(component_id="container-analysis_results", component_property="children"),
-    Output(component_id="container-sentence_info", component_property="style"),
-    Output(component_id="jumbotron", component_property="style"),
-    Input(component_id="button-submit", component_property="n_clicks"),
-    State(component_id="input-text_to_process", component_property="value"),
+    Output(component_id="generation_results-container", component_property="children"),
+    Output(component_id="container-all_generation", component_property="style"),
+    Output(component_id="footer-generation", component_property="fixed"),
+    Output(component_id="hidden-comp-generation", component_property="data"),
+    Input(component_id="button-submit-generate", component_property="n_clicks"),
+    State(component_id="input-text_to_analyze", component_property="value"),
     prevent_initial_call=True,  # this prevents callback triggering at page load (before the Submit button is clicked)
     suppress_callback_exceptions=True,
 )
 def process_text(n_clicks, input_text):
-    # what do we want chatGPT to do?
     prompt = f"""
         Write the text delimited by triple backticks \
         in form of a really short russian propaganda breaking news. \
@@ -55,92 +61,57 @@ def process_text(n_clicks, input_text):
         """
     output_text, output_tokens = get_completion(prompt)
 
-    # --- for debugging to save some API calls...
-    # output_text = """BREAKING NEWS: Russian Propaganda Exposed!
-    #
-    #                 In a shocking revelation, evidence has emerged exposing the Russian government's involvement in spreading propaganda. This sinister plot aims to manipulate public opinion and sow discord among nations. The truth has finally come to light, revealing the extent of Russia's deceptive tactics.
-    #
-    #                 Through a thorough investigation, it has been discovered that the Russian government has been using various platforms to disseminate false information, creating confusion and chaos. This calculated strategy aims to undermine the stability and unity of democratic societies worldwide.
-    #
-    #                 Experts have identified a network of trolls and bots, operated by the Russian government, which have been actively spreading disinformation and engaging in online manipulation. These malicious actors have been targeting vulnerable individuals and exploiting their fears and biases to further their own agenda.
-    #
-    #                 The consequences of this propaganda campaign are far-reaching. It has not only affected elections and political processes but has also fueled tensions between nations, leading to increased hostility and mistrust. The Russian government's actions have jeopardized global peace and security.
-    #
-    #                 World leaders and international organizations are now calling for a united front against this propaganda war. Efforts are being made to expose and counteract Russia's deceptive tactics, ensuring that the truth prevails over manipulation.
-    #
-    #                 As the world becomes more aware of Russia's propaganda machine, it is crucial for individuals to remain vigilant and discerning when consuming information. By questioning sources and verifying facts, we can collectively combat the spread of disinformation and protect the integrity of our societies.
-    #
-    #                 Stay tuned for more updates on this"""
-    # output_tokens = 0
-
-    # Experimental: generate image based on prompt
-    # prompt_img = f"""                                                                  # #
-    #     What is the main nomen in the text delimited by triple backticks? \            # #
-    #     If there is no noun, what is the main verb? \                                  # #
-    #     As an output just give me either the noun or the nominalisation of the verb. \ # #
-    #     No addition text, just one token.                                              # #
-    #     ```{input_text}```                                                             # #
-    #     """                                                                            # #
-    #                                                                                    # #
-    # img_text, img_tokens = get_completion(prompt_img)                                  # #
-    # print(output_text)                                                                 # #
-    # img = get_image(img_text)                                                            #
-    #
-
     sentences = extract_sentences(output_text)
 
     classified_sentences, ranking, n_tokens = classify_sentences(sentences)
     # caution: ranking starts with the lowest
     n_tokens += output_tokens
 
-    output_children = render(classified_sentences)
+    output_children = render(classified_sentences, ranking=ranking)
 
-    return (
-        output_children,
-        {"opacity": 1, "visibility": "visible", "transition": "opacity 1.0s ease"},
-        {"opacity": 1, "visibility": "visible", "transition": "opacity 2.0s ease"},
-    )
+    return \
+        output_children, \
+        {
+            "opacity": 1,
+            "visibility": "visible",
+            "transition": "opacity 1.0s ease",
+            "min-height": 400,
+        }, \
+        False,\
+        classified_sentences
 
 
 # callback to update info about which highlighted sentence was selected - the definition of the mark component is
 #  located in generalutils.py, in the style_box() function
 @callback(
-    Output(component_id="container-sentence_info", component_property="children"),
+    Output(component_id="found-techniques-generation", component_property="children"),
+    Output(component_id="explanation-generation", component_property="children"),
+    Input(component_id="hidden-comp-generation", component_property="data"),
     Input({"type": "mark", "index": ALL}, "n_clicks"),
     State({"type": "mark", "index": ALL}, "children"),
     prevent_initial_call=True,
 )
-def display_mark_info(n_clicks, mark_values):
+def display_mark_info(content, n_clicks, mark_values):
     ctx = dash.callback_context
     if not ctx.triggered:
-        return "Click on a mark..."
+        return "", ""
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
         mark_index = json.loads(button_id)["index"]
-        return f"You clicked on {mark_values[mark_index]}."
 
+        if content[str(mark_index)]["classes"] == ['']:
+            return " ", " "
+        techniques = content[str(mark_index)]["classes"]
 
-# TODO: this was the function I used neutralize the text at first
-# @callback(
-#     Output(component_id="container-neutralization", component_property="children"),
-#     Input(component_id="container-analysis_results", component_property="children"),
-#     prevent_initial_call=True,  # this prevents callback triggering at page load (before the Submit button is clicked),
-#     suppress_callback_exceptions=True
-# )
-# def neutralize_text(input_text):
-#     print("callback 2 fired...")
-#
-#     # what do we want chatGPT to do?
-#     prompt = f"""
-#     Rewrite the input text delimited by triple backticks \
-#     using just plain and informative language. Remove any emotions \
-#     from the text, make it sound like a robot with no emotions wrote it. \
-#     The tone has to be really cold. The input text is written in a propaganda-like \
-#     style, your job is to remove any signs of propaganda present in the input text.\
-#     The input text has either positive or negative sentiment, the text you will generate \
-#     has to have neutral sentiment. It should sound like some press agency like Reuters wrote the text.
-#     ```{input_text}```
-#     """
-#     neutral_text = get_completion(prompt)
-#
-#     return neutral_text
+        techniques_children = []
+        for i, technique in enumerate(techniques):
+            techniques_children.append(style_technique(technique))
+
+        explanation = content[str(mark_index)]["explain"]
+
+        explanation_children = [
+            style_explanation(expl, technique)
+            for expl, technique in zip(explanation, techniques)
+        ]
+
+        return techniques_children, explanation_children
