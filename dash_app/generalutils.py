@@ -77,7 +77,7 @@ term_to_defintion = {
                    " justify or promote an action or idea.",
     "Loaded Language": "Using specific words and phrases with strong emotional implications (either positive "
                        "or negative) to influence an audience.",
-    "Name Calling or Labeling": "Labeling the object of the propaganda campaign as either something the target audience "
+    "Name Calling, Labeling": "Labeling the object of the propaganda campaign as either something the target audience "
                                 "fears, hates, finds undesirable or loves, praises.",
     "Repetition": "Repeating the same message over and over again so that the audience will eventually accept it.",
     "Slogans": "A brief and striking phrase that may include labeling and stereotyping.",
@@ -85,7 +85,7 @@ term_to_defintion = {
                                    "a given topic. They are typically short, generic sentences that offer seemingly "
                                    "simple answers to complex questions or that distract attention away from other "
                                    "lines of thought.",
-    "Whataboutism or Straw Man or Red Herring": "A technique that attempts to discredit an opponent's position by "
+    "Whataboutism, Straw Man, Red Herring": "A technique that attempts to discredit an opponent's position by "
                                                 "charging them with hypocrisy without directly disproving their "
                                                 "argument, when an opponent's proposition is substituted with a similar "
                                                 "one which is then refuted in place of the original proposition or "
