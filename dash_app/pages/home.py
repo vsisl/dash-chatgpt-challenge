@@ -8,18 +8,9 @@ from dash import Input, Output, State, html, callback, dcc, ALL
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
-from dash_app.generalutils import (
-    get_completion,
-    extract_sentences,
-    classify_sentences,
-    render,
-)
+
 from dash_app.ui_components import (
-    column_input,
-    column_output,
-    column_neutral,
-    column_sentence_info,
-    left_jumbotron,
+    header,
     footer
 )
 
@@ -29,10 +20,11 @@ dash.register_page(__name__, path="/")
 # --- PAGE LAYOUT
 layout = dmc.Grid(
     [
+        dbc.Container([header]),
         dmc.Col(
             span=12,
             children=[
-                dmc.Space(h=50),
+                dmc.Space(h=70),
                 dmc.Center(
                     [
                         # TODO: replace this logo with different one, use the vectorized version of the logo (available)
