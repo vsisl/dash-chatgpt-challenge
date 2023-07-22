@@ -361,12 +361,12 @@ def render(input_dictionary, ranking=None):
     for idx, values in input_dictionary.items():
         # if sentence does not contain any propaganda techniques, simply render it as is
         if values["classes"] is None or values["classes"] == []:
-            children.append(values["sentence"])
+            children.append(values["sentence"] + ' ')
         elif ranking is not None:
             last_five_elements = ranking[-5:]
             is_in_last_five = np.isin(int(idx), last_five_elements)
             if not is_in_last_five:
-                children.append(values["sentence"])
+                children.append(values["sentence"] + ' ')
             else:
                 labels = values["classes"]
                 children.append(
