@@ -3,15 +3,6 @@ import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
 
-# TODO: remove this or move it to different place, maybe CSS file
-# useful style definition used across multiple components
-style = {
-    # "height": 100,
-    "marginBottom": 20,
-    "padding": 10,
-    # "display": "flex",
-}
-
 #######################################################################################
 #################################### ANALYSIS PART ####################################
 #######################################################################################
@@ -43,6 +34,7 @@ title_analysis = dmc.Center(
     },
 )
 
+# call to action text that pops up when using the analysis part for longer time
 call_to_action = dmc.Center(
     children=[
         html.H3(
@@ -69,7 +61,7 @@ call_to_action = dmc.Center(
 column_input_analyse = dmc.Center(
     children=[
         dmc.Container(
-            style=style,
+            style={"marginBottom": 20, "padding": 10},
             children=[
                 dmc.Group(
                     children=[
@@ -121,7 +113,7 @@ column_input_analyse = dmc.Center(
     ],
 )
 
-
+# big block storing all the components forming the analysis output
 container_analysis_results = dcc.Loading(
     type="default",
     parent_className="loading_wrapper",  # to apply custom CSS
@@ -220,9 +212,11 @@ container_analysis_results = dcc.Loading(
     ],
 )
 
+# used for storing dictionary obtained by classification, then the value is used for different callback
 hidden_comp = dcc.Store(id="hidden-comp")
 
-footer = dmc.Container(
+# footer used in landing page and analysis part
+footer_analysis = dmc.Container(
     children=[
         dmc.Footer(
         id="footer",
@@ -251,13 +245,16 @@ footer = dmc.Container(
                 html.Br(),
                 dmc.Center(
                     [
-                        DashIconify(icon="ion:logo-github", color="gray", width=20,),
+                        dmc.Anchor(
+                            DashIconify(icon="ion:logo-github", color="gray", width=20),
+                            href="https://github.com/vsisl/dash-chatgpt-challenge/",
+                        ),
                         dmc.Space(w=25),
-                        # dmc.Text(
-                        #     "2023",
-                        #     color="dimmed",
-                        # ),
-                        DashIconify(icon="bi:linkedin", color="gray", width=20),
+                        dmc.Anchor(
+                            # TODO: make 'About' page
+                            DashIconify(icon="bi:linkedin", color="gray", width=20),
+                            href="https://github.com/vsisl/dash-chatgpt-challenge/",
+                        ),
                     ]
                 ),
             ]
@@ -269,7 +266,7 @@ footer = dmc.Container(
 #######################################################################################
 ################################### GENERATIVE PART ###################################
 #######################################################################################
-# title of the generative  part of the project
+# title of the generative part of the project
 title_generate = dmc.Center(
     children=[
         dmc.Space(h="xl"),
@@ -301,7 +298,7 @@ title_generate = dmc.Center(
 column_input_generate = dmc.Center(
     children=[
         dmc.Container(
-            style=style,
+            style={"marginBottom": 20, "padding": 10},
             children=[
                 dmc.Group(
                     children=[
@@ -342,7 +339,7 @@ column_input_generate = dmc.Center(
     ],
 )
 
-
+# big block storing all the components forming the analysis output in the generative part
 container_generation_results = dcc.Loading(
     type="default",
     parent_className="loading_wrapper",  # to apply custom CSS
@@ -441,9 +438,10 @@ container_generation_results = dcc.Loading(
     ],
 )
 
-
+# hidden component used for storing dictionary with classified text, then used as input for different callback
 hidden_comp_generation = dcc.Store(id="hidden-comp-generation")
 
+# footer used in the generative part
 footer_generation = dmc.Container(
     children=[
         dmc.Footer(
@@ -473,13 +471,15 @@ footer_generation = dmc.Container(
                 html.Br(),
                 dmc.Center(
                     [
-                        DashIconify(icon="ion:logo-github", color="gray", width=20,),
+                        dmc.Anchor(
+                            DashIconify(icon="ion:logo-github", color="gray", width=20),
+                            href="https://github.com/vsisl/dash-chatgpt-challenge/",
+                        ),
                         dmc.Space(w=25),
-                        # dmc.Text(
-                        #     "2023",
-                        #     color="dimmed",
-                        # ),
-                        DashIconify(icon="bi:linkedin", color="gray", width=20),
+                        dmc.Anchor(
+                            DashIconify(icon="bi:linkedin", color="gray", width=20),
+                            href="https://github.com/vsisl/dash-chatgpt-challenge/",
+                        ),
                     ]
                 ),
             ]
@@ -518,6 +518,7 @@ menu = html.Div(
     style={"margin-left": "75vw", "margin-right": 0},
 )
 
+# global header with dropdown menu
 header = dmc.Header(
     height=60,
     fixed=True,
