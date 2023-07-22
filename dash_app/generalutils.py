@@ -118,23 +118,27 @@ def classify_sentences(sentences):
     :param sentences: list of str; list of sentences to be classified;
                         e.g. ['BREAKING NEWS: Russian Propaganda Exposed!',
                               "In a shocking revelation, evidence has emerged exposing the Russian government's ..."]
-    :return: out dict: dict;
+    :return: out_dict: dict;
                         e.g.
                             {
                                 '0': {
                                     'sentence': 'BREAKING NEWS: Russian Propaganda Exposed!',
                                     'classes': ['Flag-Waving'],
-                                    'confidence': [1],
+                                    'confidence': [0.2],
                                     'explain': ['The sentence uses loaded language and exclamation marks to create a sense of urgency and patriotism, indicating a flag-waving technique.']
                                 },
                                 '1': {
                                     'sentence': "In a shocking revelation, evidence has emerged exposing the Russian government's ...",
-                                    'classes': ['Appeal to Fear Prejudice'],
-                                    'confidence': [1],
+                                    'classes': ['Appeal to Fear Prejudice', 'Appeal to Authority'],
+                                    'confidence': [0.5, 0.8],
                                     'explain': ['The sentence uses loaded language ("shocking revelation") and appeals to fear by exposing the Russian government.']
                                 }
                             }
-             best: numpy.ndarray TODO: explain
+             best: numpy.ndarray; array of indices of sentences from variable 'out_dict';
+                                    indices are ordered based on propaganda scores (highest to lowest) of individual
+                                    sentences
+                                e.g.
+                                    [1, 0]
              total_tokens: int; total API tokens used by this function call
     """
     out_dict = {}

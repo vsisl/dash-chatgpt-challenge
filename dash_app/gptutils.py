@@ -4,10 +4,12 @@ Functions making openAI API calls.
 import ast
 import json
 import openai  # chat-gpt API
+from dash_app.flask_cache import cache
 
 openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
 
 
+@cache.memoize(timeout=7 * 24 * 3600)
 def get_completion(prompt, model="gpt-3.5-turbo"):
     """Creates chatGPT response for a given prompt.
 
@@ -198,6 +200,7 @@ def get_classification_cheaper(sentence, model="gpt-3.5-turbo"):
     return propaganda_techniques, tokens_used
 
 
+@cache.memoize(timeout=7 * 24 * 3600)
 def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     """Takes given sentence and classifies it based on presence of propaganda techniques.
 
@@ -213,16 +216,15 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
              used_tokens int: total API call tokens used by this function call
     """
     prompt = f""" classify the sentence delimited by triple backticks into the following list of classes:
-                         ‘Appeal to Authority’, ‘Appeal to Fear Prejudice’,‘Bandwagon, Reductio ad hitlerum’,' Black and White Fallacy’, \
-                         ‘Causal Oversimplification’, ‘Doubt’, ‘Exaggeration, Minimisation’, ‘Flag-Waving’, ‘Loaded Language’, \
-                         ‘Name Calling, Labeling’, ‘Repetition’, ‘Slogans’, ‘Thought-terminating Cliches’, \
-                         ‘Whataboutism, Straw Man, Red Herring’ \
-                         If no class was classified, assign the sentence the 'None' class.
+                         "Appeal to Authority", "Appeal to Fear Prejudice", "Bandwagon, Reductio ad hitlerum", "Black and White Fallacy", \
+                         "Causal Oversimplification", "Doubt", "Exaggeration, Minimisation", "Flag-Waving", "Loaded Language", \
+                         "Name Calling, Labeling", "Repetition", "Slogans", "Thought-terminating Cliches", \
+                         "Whataboutism, Straw Man, Red Herring" \
                          As an output, give me a python dictionary with the following keys:
-                         1. 'classes' where all the classes are saved as an array
-                         2. 'confidence' where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. The 'None' \
-                            the 'None' class should be assign a 0 by default.
-                         3. 'explain' where an explanation is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If the sentence belongs to the 'None' class, leave the entry empty.
+                         1. "classes" where all the classes are saved as a list. Use only the classes provided at the beginning with the exact spelling. If no class was classified, instead of a list return None.
+                         2. "confidence" where a numerical value is assigned to each class representing the confidence of how the class is present in the text. 1 is the maximum number, 0 the lowest. \
+                             Just give me a list as output where the order corresponds to the order of the classes. If no class was classified, instead of a list return None. \
+                         3. "explain" where an explanation is given why you have classified the sentence with this class. Don't repeat the sentence and keep it concise. If no class was classified, instead of a list return None.
                           ```{sentence}````
                """
     message = [{"role": "user", "content": prompt}]
@@ -260,7 +262,9 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     if classification_result["classes"] is not None:
         # Note: We had a case when the value of classification_result['classes'] was ['Appeal to Authority', 'None']
         #  the 'None' value was not supposed to be there and caused the function entity() to crash...
-        for technique in classification_result["classes"]:
+        #  If technique is not found in the list of techniques, we need to remove also the score and explaination.
+
+        for i, technique in enumerate(classification_result["classes"]):
             # TODO: store a list of all supported techniques in some separate module
             if technique not in [
                 "Appeal to Authority",
@@ -278,7 +282,16 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
                 "Thought-terminating Cliches",
                 "Whataboutism, Straw Man, Red Herring",
             ]:
-                classification_result["classes"].remove(technique)
+                # if technique is not from the list of supported options, remove it
+                classification_result["classes"].pop(i)
+                classification_result["confidence"].pop(i)
+                classification_result["explain"].pop(i)
+
+                # if there are no techniques left, assign None values (instead of empty lists)
+                if len(classification_result["classes"]) == 0:
+                    classification_result["classes"] = None
+                    classification_result["confidence"] = None
+                    classification_result["explain"] = None
 
     # TODO: implement further data validation
 
