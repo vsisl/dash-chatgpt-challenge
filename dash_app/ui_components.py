@@ -522,4 +522,5 @@ header = dmc.Header(
     height=60,
     fixed=True,
     children=[menu],
+    withBorder=False,
 )
