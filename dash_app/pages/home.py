@@ -11,7 +11,7 @@ from dash_iconify import DashIconify
 
 from dash_app.ui_components import (
     header,
-    footer
+    footer_analysis
 )
 
 
@@ -129,6 +129,6 @@ layout = dmc.Grid(
                 dmc.Space(h=105),
             ],
         ),
-        footer
+        footer_analysis
     ]
 )
