@@ -3,6 +3,7 @@ Utilities & other helper functions.
 """
 import re
 import ast
+import random
 import numpy as np
 import pandas as pd
 from dash import html
@@ -268,29 +269,7 @@ def entity(children, techniques, idx):
     return style_box(children, title, idx)
 
 
-def render(classified_sentences):
-    # TODO: add docstring
-    children = []
-
-    for i, sentence_dict in classified_sentences.items():
-        # if sentence does not contain any propaganda techniques, simply render it as is
-        if sentence_dict["classes"] is None:
-            children.append(sentence_dict["sentence"])
-
-        # if sentence contains propaganda techniques, apply special styling and add labels
-        else:
-            labels = sentence_dict["classes"]
-            # children.append(entity(ary[i][0], term_to_abbreviation[labels[0]], idx))
-            children.append(
-                entity(
-                    children=sentence_dict["sentence"], techniques=labels, idx=int(i)
-                )
-            )
-
-    return children
-
-
-def render_dict(input_dictionary, ranking=None):
+def render(input_dictionary, ranking=None):
     # TODO: add docstring
     children = []
 
@@ -320,3 +299,14 @@ def render_dict(input_dictionary, ranking=None):
             )
 
     return children
+
+
+def load_random_article():
+    # Generate a random number between 1 and 9
+    random_num = random.randint(1, 9)
+
+    # Construct the filename
+    article_name = f"article_{random_num}.npy"
+    ranking_name = f"article_{random_num}_ranking.npy"
+
+    return article_name, ranking_name
