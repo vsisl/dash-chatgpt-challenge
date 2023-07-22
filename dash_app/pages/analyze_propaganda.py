@@ -7,20 +7,21 @@ import json
 from dash import Input, Output, State, callback, ALL
 import dash_bootstrap_components as dbc
 from dash_app.generalutils import (
-    get_completion,
+    load_random_article,
     extract_sentences,
     classify_sentences,
     style_technique,
     style_explanation,
-    render_dict,
+    render,
 )
 from dash_app.ui_components import (
     column_input_analyse,
     hidden_comp,
-    title,
+    title_analysis,
     container_analysis_results,
     call_to_action,
     footer,
+    header,
 )
 
 
@@ -28,9 +29,10 @@ dash.register_page(__name__, path="/analyse")
 
 # --- PAGE LAYOUT
 layout = [
+    dbc.Container([header]),
     dbc.Container(
         children=[
-            dbc.Row([title]),
+            dbc.Row([title_analysis]),
             dbc.Row([column_input_analyse]),
             dbc.Row([container_analysis_results]),
             dbc.Row([call_to_action]),
@@ -39,6 +41,9 @@ layout = [
     ),
     dbc.Container([footer]),
 ]
+
+# --- CALLBACKS
+
 
 @callback(
     Output(component_id="analysis_results-container", component_property="children"),
@@ -52,7 +57,7 @@ layout = [
     prevent_initial_call=True,  # this prevents callback triggering at page load (before the Submit button is clicked)
     suppress_callback_exceptions=True,
 )
-def process_example(n_clicks_1, n_clicks_2, input_text):
+def process_input(n_clicks_1, n_clicks_2, input_text):
     call_to_action_style = {"opacity": 0, "visibility": "hidden", "marginTop": 16}
 
     ctx = dash.callback_context
@@ -72,13 +77,14 @@ def process_example(n_clicks_1, n_clicks_2, input_text):
 
         classified_sentences, ranking, n_tokens = classify_sentences(sentences)
     else:
-        classified_sentences = np.load('data/example_0.npy', allow_pickle=True).item()
-        ranking = np.load('data/example_0_ranking.npy', allow_pickle=True)
+        article_name, ranking_name = load_random_article()
+        classified_sentences = np.load('data/example_articles/' + article_name, allow_pickle=True).item()
+        ranking = np.load('data/example_articles/' + ranking_name, allow_pickle=True)
         # sleep some time to show Putin loading
         time.sleep(2)
 
     # caution: ranking starts with the lowest
-    output_text = render_dict(classified_sentences, ranking=ranking)
+    output_text = render(classified_sentences, ranking=ranking)
 
     return \
         output_text, \
@@ -91,6 +97,7 @@ def process_example(n_clicks_1, n_clicks_2, input_text):
         False,\
         call_to_action_style,\
         classified_sentences
+
 
 @callback(
     Output(component_id="found-techniques", component_property="children"),
