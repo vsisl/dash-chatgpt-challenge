@@ -12,17 +12,18 @@ title_analysis = dmc.Center(
         dmc.Space(h="xl"),
         html.H1(
             children=[
-                "Analyze a text with ",
-                html.Br(),
-                html.Span(
-                    "PropagandaBot",
-                    style={
-                        "font-family": "Propaganda",  # custom free font, located in /assets
-                        "background": "linear-gradient(to right, #ff0000, #0600ff)",
-                        "-webkit-background-clip": "text",
-                        "-webkit-text-fill-color": "transparent",
-                    },
-                ),
+                "Analyze a propaganda text",
+                # "Analyze a text with ",
+                # html.Br(),
+                # html.Span(
+                #     "PropagandaBot",
+                #     style={
+                #         "font-family": "Propaganda",  # custom free font, located in /assets
+                #         "background": "linear-gradient(to right, #ff0000, #0600ff)",
+                #         "-webkit-background-clip": "text",
+                #         "-webkit-text-fill-color": "transparent",
+                #     },
+                # ),
             ],
             style={"display": "inline-block"},
         ),
@@ -272,17 +273,18 @@ title_generate = dmc.Center(
         dmc.Space(h="xl"),
         html.H1(
             children=[
-                "Generate a text with ",
-                html.Br(),
-                html.Span(
-                    "PropagandaBot",
-                    style={
-                        "font-family": "Propaganda",  # custom free font, located in /assets
-                        "background": "linear-gradient(to right, #ff0000, #0600ff)",
-                        "-webkit-background-clip": "text",
-                        "-webkit-text-fill-color": "transparent",
-                    },
-                ),
+                "Generate a propaganda text ",
+                # "Generate a text with ",
+                # html.Br(),
+                # html.Span(
+                #     "PropagandaBot",
+                #     style={
+                #         "font-family": "Propaganda",  # custom free font, located in /assets
+                #         "background": "linear-gradient(to right, #ff0000, #0600ff)",
+                #         "-webkit-background-clip": "text",
+                #         "-webkit-text-fill-color": "transparent",
+                #     },
+                # ),
             ],
             style={"display": "inline-block"},
         ),
