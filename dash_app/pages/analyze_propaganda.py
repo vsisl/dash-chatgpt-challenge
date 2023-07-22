@@ -73,7 +73,7 @@ def process_input(n_clicks_1, n_clicks_2, input_text):
 
     Returns:
     tuple:
-    - str: Output text containing the processed analysis results. This "text" is formed both by plain string sentence
+    - list: Output text containing the processed analysis results. This "text" is formed both by plain string sentence
            and highlighted sentences that are html.Mark objects.
     - dict: Style properties for the "all_analysis" container - initially it is hidden and only after this callback is
             executed, it appears.
@@ -82,6 +82,7 @@ def process_input(n_clicks_1, n_clicks_2, input_text):
             clicked more than once in total, it appears.
     - dict: Data for the "hidden-comp" component to use in the following callback
     """
+    # initially the call to action is hidden
     call_to_action_style = {"opacity": 0, "visibility": "hidden", "marginTop": 16}
 
     # check which button was pushed to decide what action to take
@@ -89,6 +90,7 @@ def process_input(n_clicks_1, n_clicks_2, input_text):
     button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
     if n_clicks_1 + n_clicks_2 > 1:
+        # if the buttons are clicked more than once in total, the call to action appears
         call_to_action_style = {
             "opacity": 1,
             "visibility": "visible",
