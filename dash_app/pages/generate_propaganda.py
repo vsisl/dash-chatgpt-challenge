@@ -27,7 +27,7 @@ dash.register_page(__name__, path="/generate")
 
 # --- PAGE LAYOUT
 layout = [
-    dbc.Container([header]),
+    # dbc.Container([header]),
     dbc.Container(
         children=[
             dbc.Row([title_generate]),

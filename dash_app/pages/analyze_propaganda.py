@@ -29,7 +29,7 @@ dash.register_page(__name__, path="/analyse")
 
 # --- PAGE LAYOUT
 layout = [
-    dbc.Container([header]),
+    # dbc.Container([header]),
     dbc.Container(
         children=[
             dbc.Row([title_analysis]),

@@ -20,7 +20,7 @@ dash.register_page(__name__, path="/")
 # --- PAGE LAYOUT
 layout = dmc.Grid(
     [
-        dbc.Container([header]),
+        # dbc.Container([header]),
         dmc.Col(
             span=12,
             children=[
