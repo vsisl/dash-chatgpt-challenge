@@ -22,6 +22,7 @@ from dash_app.ui_components import (
     call_to_action,
     footer_analysis,
     header,
+    article_info,
 )
 
 
@@ -110,15 +111,20 @@ def process_input(n_clicks_1, n_clicks_2, input_text):
         classified_sentences, ranking, n_tokens = classify_sentences(sentences)
     else:
         # example was chosen, a random article has to be loaded
-        article_name, ranking_name = load_random_article()
+        article_name, ranking_name, label_name = load_random_article()
         classified_sentences = np.load(
             "data/example_articles/" + article_name, allow_pickle=True
         ).item()
         ranking = np.load("data/example_articles/" + ranking_name, allow_pickle=True)
+        with open("data/example_articles/" + label_name, "r") as file:
+            label = file.read()
         # sleep some time to show Putin loading - otherwise the text would be loaded right away
-        time.sleep(4)
+        time.sleep(2)
 
     output_text = render(classified_sentences, ranking=ranking)
+
+    if button_id == "button-try-example":
+        output_text.extend(article_info(label))
 
     return (
         output_text,

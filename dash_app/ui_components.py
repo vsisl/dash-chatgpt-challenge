@@ -58,6 +58,34 @@ call_to_action = dmc.Center(
     style={"opacity": 0, "visibility": "hidden", "marginTop": 16},
 )
 
+
+# article info that appears when 'Try Example' is clicked
+def article_info(label):
+    article_information = [
+        html.Br(),
+        html.Br(),
+        dmc.Center(
+            children=[
+                html.H3(
+                    children=[
+                            dmc.Tooltip(
+                                multiline=True,
+                                position="left",
+                                withArrow=True,
+                                width=420,
+                                transition="fade",
+                                transitionDuration=200,
+                                label=label,
+                                children=[dmc.Group([DashIconify(icon="ep:info-filled", width=20, color="#DEDEDE"), dmc.Text("Where does this example come from?", color="gray", size="md")])],
+                            ),
+                    ],
+                    style={"display": "inline-block"},
+                ),
+            ],
+        )
+    ]
+    return article_information
+
 # column - text input used in the analysis part of the project
 column_input_analyse = dmc.Center(
     children=[

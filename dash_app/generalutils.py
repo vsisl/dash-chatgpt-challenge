@@ -406,5 +406,6 @@ def load_random_article():
     # Construct the filename
     article_name = f"article_{random_num}.npy"
     ranking_name = f"article_{random_num}_ranking.npy"
+    label_name = f"article_{random_num}_description.txt"
 
-    return article_name, ranking_name
+    return article_name, ranking_name, label_name
