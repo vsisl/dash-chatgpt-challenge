@@ -252,9 +252,9 @@ footer_analysis = dmc.Container(
                         ),
                         dmc.Space(w=25),
                         dmc.Anchor(
-                            # TODO: make 'About' page
-                            DashIconify(icon="bi:linkedin", color="gray", width=20),
-                            href="https://github.com/vsisl/dash-chatgpt-challenge/",
+                            dmc.Text("Authors", color="gray"),
+                            # DashIconify(icon="bi:linkedin", color="gray", width=20),
+                            href="/authors",
                         ),
                     ]
                 ),
@@ -479,8 +479,9 @@ footer_generation = dmc.Container(
                         ),
                         dmc.Space(w=25),
                         dmc.Anchor(
-                            DashIconify(icon="bi:linkedin", color="gray", width=20),
-                            href="https://github.com/vsisl/dash-chatgpt-challenge/",
+                            dmc.Text("Authors", color="gray"),
+                            # DashIconify(icon="bi:linkedin", color="gray", width=20),
+                            href="/authors",
                         ),
                     ]
                 ),
@@ -526,4 +527,94 @@ header = dmc.Header(
     fixed=True,
     children=[menu],
     withBorder=False,
+)
+
+authors = dmc.Container(
+    children=[
+        dmc.Space(h=75),
+        dmc.Center(dmc.Title(f"Authors of PropagandaBot", order=1),),
+        dmc.Space(h=35),
+        dmc.Grid(
+            children=[
+                dmc.Col(
+                    children=[
+                        dmc.Card(
+                            children=[
+                                dmc.Group(
+                                    [
+                                        # dmc.Avatar("VS", color="cyan", radius="xl"),
+                                        html.P("Václav Šísl", style={"font-weight": "bold"}),
+                                        dmc.Anchor(
+                                            DashIconify(icon="bi:linkedin", color="gray", width=20),
+                                            href="https://ch.linkedin.com/in/vaclav-sisl",
+                                        ),
+                                    ],
+                                    position="apart",
+                                    mt="md",
+                                    mb="xs",
+                                ),
+                            ],
+                            withBorder=True,
+                            shadow="sm",
+                            radius="md",
+                            style={"width": 350},
+                        )
+                    ],
+                    span=4
+                ),
+                dmc.Col(
+                    children=[
+                        dmc.Card(
+                            children=[
+                                dmc.Group(
+                                    [
+                                        # dmc.Avatar("VS", color="cyan", radius="xl"),
+                                        html.P("Christian Horvath", style={"font-weight": "bold"}),
+                                        dmc.Anchor(
+                                            DashIconify(icon="bi:linkedin", color="gray", width=20),
+                                            href="https://ch.linkedin.com/in/christian-horvat-466048214",
+                                        ),
+                                    ],
+                                    position="apart",
+                                    mt="md",
+                                    mb="xs",
+                                ),
+                            ],
+                            withBorder=True,
+                            shadow="sm",
+                            radius="md",
+                            style={"width": 350},
+                        )
+                    ],
+                    span=4
+                ),
+                dmc.Col(
+                    children=[
+                        dmc.Card(
+                            children=[
+                                dmc.Group(
+                                    [
+                                        # dmc.Avatar("VS", color="cyan", radius="xl"),
+                                        html.P("Jan Bureš", style={"font-weight": "bold"}),
+                                        dmc.Anchor(
+                                            DashIconify(icon="bi:linkedin", color="gray", width=20),
+                                            href="https://www.linkedin.com/in/jan-bure%C5%A1-6b2283216/",
+                                        ),
+                                    ],
+                                    position="apart",
+                                    mt="md",
+                                    mb="xs",
+                                ),
+                            ],
+                            withBorder=True,
+                            shadow="sm",
+                            radius="md",
+                            style={"width": 350},
+                        )
+                    ],
+                    span=4
+                ),
+            ]
+        ),
+    ]
 )
