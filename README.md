@@ -45,5 +45,5 @@ $ docker compose -f docker-compose.yml up
 5) In another terminal window, run the dash app:
 
     ```bash
-    $ python dash_app/app.py
+    $ python -m dash_app.app
     ```
