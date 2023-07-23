@@ -11,11 +11,12 @@ dependencies:
   - gunicorn=20.1.0                     # web server for the dash app
   - black=23.3.0                        # automated code formatting
   - openai=0.27.8                       # chatGPT API
-  - nltk=3.8.1                          # natural language processing
   - numpy=1.25.1
   - pandas=2.0.3
   - flask-caching=2.0.2
   - pip=23.2
   - pip:
     - redis==4.6.0
+    - celery[redis]==5.3.1
     - dash-mantine-components==0.12.1
+    - dash-iconify==0.1.2

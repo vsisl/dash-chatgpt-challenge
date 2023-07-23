@@ -36,8 +36,14 @@ $ docker compose -f docker-compose.yml up
     $ docker run -p 6379:6379 --rm redis
     ```
     
-4) Run the app:
+4) In another terminal window, run celery worker:
+
+   ```bash
+    $ celery -A dash_app.app.celery_app worker --concurrency=2 --loglevel=INFO
+    ```
+       
+5) In another terminal window, run the dash app:
 
     ```bash
-    $ python dash_app/app.py
+    $ python -m dash_app.app
     ```

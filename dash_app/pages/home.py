@@ -7,18 +7,11 @@ import json
 from dash import Input, Output, State, html, callback, dcc, ALL
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-from dash_app.generalutils import (
-    get_completion,
-    extract_sentences,
-    classify_sentences,
-    render,
-)
+from dash_iconify import DashIconify
+
 from dash_app.ui_components import (
-    column_input,
-    column_output,
-    column_neutral,
-    column_sentence_info,
-    left_jumbotron,
+    header,
+    footer_analysis
 )
 
 
@@ -27,21 +20,23 @@ dash.register_page(__name__, path="/")
 # --- PAGE LAYOUT
 layout = dmc.Grid(
     [
+        # dbc.Container([header]),
         dmc.Col(
             span=12,
             children=[
-                dmc.Space(h=50),
+                dmc.Space(h=70),
                 dmc.Center(
                     [
                         # TODO: replace this logo with different one, use the vectorized version of the logo (available)
                         dmc.Image(
-                            src=r"/assets/putin.png",
+                            # src=r"/assets/putin.png",
+                            src=r"/assets/logo-inverse-small.png",
                             alt="PropagandaBot",
                             style={"width": "375px"},
                         ),
                     ]
                 ),
-                dmc.Space(h=30),
+                dmc.Space(h=60),
             ],
         ),
         dmc.Col(
@@ -55,7 +50,8 @@ layout = dmc.Grid(
                                     children=[
                                         dmc.Group(
                                             [
-                                                dmc.Text("Analyse", weight=500),
+                                                html.H4("Analyse",
+                                                        style={"weight": 800}),
                                                 dmc.Badge(
                                                     "Recommended",
                                                     color="green",
@@ -68,7 +64,7 @@ layout = dmc.Grid(
                                         ),
                                         dmc.Text(
                                             "Analyse a text to discover if it contains techniques of propaganda.",
-                                            size="sm",
+                                            # size="sm",
                                             color="dimmed",
                                         ),
                                         dmc.Anchor(
@@ -80,7 +76,7 @@ layout = dmc.Grid(
                                                 mt="md",
                                                 radius="md",
                                             ),
-                                            href="/analyse",
+                                            href="/analyze",
                                         ),
                                     ],
                                     withBorder=True,
@@ -92,12 +88,13 @@ layout = dmc.Grid(
                                     children=[
                                         dmc.Group(
                                             [
-                                                dmc.Text("Generate", weight=500),
-                                                dmc.Badge(
-                                                    "Advanced",
-                                                    color="orange",
-                                                    variant="light",
-                                                ),
+                                                html.H4("Generate",
+                                                        style={"weight": 800}),
+                                                # dmc.Badge(
+                                                #     "Advanced",
+                                                #     color="orange",
+                                                #     variant="light",
+                                                # ),
                                             ],
                                             position="apart",
                                             mt="md",
@@ -105,7 +102,7 @@ layout = dmc.Grid(
                                         ),
                                         dmc.Text(
                                             "Generate propaganda text on a topic of your choice.",
-                                            size="sm",
+                                            # size="sm",
                                             color="dimmed",
                                         ),
                                         dmc.Anchor(
@@ -128,8 +125,10 @@ layout = dmc.Grid(
                             ]
                         )
                     ]
-                )
+                ),
+                dmc.Space(h=105),
             ],
         ),
+        footer_analysis
     ]
 )

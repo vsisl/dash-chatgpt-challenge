@@ -258,16 +258,6 @@ def get_classification_christian(sentence, model="gpt-3.5-turbo"):
     ):
         raise ValueError(f"Response does not contain the expected keys.")
 
-    # make sure the returned data structures are either lists or None values
-    for param in ["classes", "confidence", "explain"]:
-        if type(classification_result[param]) not in [list, None]:
-            raise TypeError(f"Unexpected type: {classification_result}")
-
-    # make sure data types are consistent (all are the same type - either list or None)
-    nr_of_types = len(set(map(type, [var for var in classification_result.values()])))
-    if nr_of_types != 1:
-        raise TypeError(f"Inconsistent data types: {classification_result}")
-
     # make sure that all propaganda techniques identified by the classifier are among the expected options
     if classification_result["classes"] is not None:
         # Note: We had a case when the value of classification_result['classes'] was ['Appeal to Authority', 'None']

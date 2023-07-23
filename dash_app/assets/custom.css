@@ -18,7 +18,7 @@
     border: 1px solid #e1dbdb;
     border-radius: 6px;
     background-color: white;
-    line-height: 1.8;
+    line-height: 2.1;
     text-align: justify;
     transition: box-shadow 0.7s ease-in-out;
 }
@@ -36,11 +36,28 @@
     border-radius: 6px;
     background-color: white;
     line-height: 1.8;
+    text-align: justify;
     transition: box-shadow 0.7s ease-in-out;
 }
 
 /* just for a little shadow when hovering over results*/
 .sentence_info-container:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* for styling of the box containing analysis of the sentences */
+.sentence_techniques-container {
+    margin:15px;
+    padding: 15px;
+    border: 1px solid #e1dbdb;
+    border-radius: 6px;
+    background-color: white;
+    line-height: 2.5;
+    transition: box-shadow 0.7s ease-in-out;
+}
+
+/* just for a little shadow when hovering over results*/
+.sentence_techniques-container:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
