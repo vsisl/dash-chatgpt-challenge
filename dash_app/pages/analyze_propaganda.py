@@ -54,6 +54,11 @@ layout = [
     Input(component_id="button-submit-original", component_property="n_clicks"),
     Input(component_id="button-try-example", component_property="n_clicks"),
     State(component_id="input-text_to_analyze", component_property="value"),
+    background=True,
+    running=[
+        (Output("button-submit-original", "disabled"), True, False),
+        (Output("button-try-example", "disabled"), True, False),
+    ],
     prevent_initial_call=True,  # this prevents callback triggering at page load (before the Submit button is clicked)
     suppress_callback_exceptions=True,
 )
@@ -111,7 +116,7 @@ def process_input(n_clicks_1, n_clicks_2, input_text):
         ).item()
         ranking = np.load("data/example_articles/" + ranking_name, allow_pickle=True)
         # sleep some time to show Putin loading - otherwise the text would be loaded right away
-        time.sleep(2)
+        time.sleep(4)
 
     output_text = render(classified_sentences, ranking=ranking)
 

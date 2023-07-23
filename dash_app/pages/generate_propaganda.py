@@ -50,6 +50,10 @@ layout = [
     Output(component_id="hidden-comp-generation", component_property="data"),
     Input(component_id="button-submit-generate", component_property="n_clicks"),
     State(component_id="input-text_to_analyze", component_property="value"),
+    background=True,
+    running=[
+        (Output("button-submit-generate", "disabled"), True, False),
+    ],
     prevent_initial_call=True,  # this prevents callback triggering at page load (before the Submit button is clicked)
     suppress_callback_exceptions=True,
 )
