@@ -13,6 +13,29 @@ services:
       - dash_chatgpt-dev-network
     restart: unless-stopped
 
+  # worker for async. processes
+  celery_worker:
+    container_name: dash_chatgpt_challenge-dev-celery_worker
+    image: vsisl/dash_chatgpt_challenge-celery_worker:dev
+    build:
+      context: .
+      dockerfile: celery_app/Dockerfile
+    networks:
+      - dash_chatgpt-network
+    environment:
+      - PYTHONUNBUFFERED=1                  # in order to get python prints into the container's log file
+      - REDISTOGO_URL=redis://redis:6379    # to connect with redis
+    depends_on:
+      - redis
+    logging:
+      driver: json-file
+      options:
+        max-file: '10'
+        max-size: '200k'
+    restart: unless-stopped
+    volumes:
+      - ../dash-chatgpt-challenge:/home/docker/dash-chatgpt-challenge
+
   dash_app:
     container_name: dash_chatgpt_challenge-dev-dash_app
     image: vsisl/dash_chatgpt_challenge:dev
