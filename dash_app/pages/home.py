@@ -76,7 +76,7 @@ layout = dmc.Grid(
                                                 mt="md",
                                                 radius="md",
                                             ),
-                                            href="/analyse",
+                                            href="/analyze",
                                         ),
                                     ],
                                     withBorder=True,
@@ -90,11 +90,11 @@ layout = dmc.Grid(
                                             [
                                                 html.H4("Generate",
                                                         style={"weight": 800}),
-                                                dmc.Badge(
-                                                    "Advanced",
-                                                    color="orange",
-                                                    variant="light",
-                                                ),
+                                                # dmc.Badge(
+                                                #     "Advanced",
+                                                #     color="orange",
+                                                #     variant="light",
+                                                # ),
                                             ],
                                             position="apart",
                                             mt="md",

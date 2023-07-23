@@ -12,7 +12,7 @@ title_analysis = dmc.Center(
         dmc.Space(h="xl"),
         html.H1(
             children=[
-                "Analyze a propaganda text",
+                "Analyze propaganda",
                 # "Analyze a text with ",
                 # html.Br(),
                 # html.Span(
@@ -111,7 +111,7 @@ column_input_analyse = dmc.Center(
                             )],
                         ),
                         dbc.Textarea(
-                                id="input-text_to_analyze",
+                            id="input-text_to_analyze",
                             maxlength=1300,
                             valid=False,
                             placeholder="Type or paste text here...",
@@ -301,7 +301,7 @@ title_generate = dmc.Center(
         dmc.Space(h="xl"),
         html.H1(
             children=[
-                "Generate a propaganda text ",
+                "Generate propaganda",
                 # "Generate a text with ",
                 # html.Br(),
                 # html.Span(
@@ -349,10 +349,10 @@ column_input_generate = dmc.Center(
                             )],
                         ),
                         dbc.Textarea(
-                                id="input-text_to_analyze",
+                            id="input-text_to_analyze",
                             maxlength=1300,
                             valid=False,
-                            placeholder="Type text here...",
+                            placeholder="Enter a topic for a propaganda text...",
                             style={"width": 500, "position": "relative"},
                         ),
                         dmc.Button(

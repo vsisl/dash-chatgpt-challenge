@@ -26,7 +26,7 @@ from dash_app.ui_components import (
 )
 
 
-dash.register_page(__name__, path="/analyse")
+dash.register_page(__name__, path="/analyze")
 
 # --- PAGE LAYOUT
 layout = [
