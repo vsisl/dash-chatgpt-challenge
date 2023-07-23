@@ -17,5 +17,6 @@ dependencies:
   - pip=23.2
   - pip:
     - redis==4.6.0
+    - celery[redis]==5.3.1
     - dash-mantine-components==0.12.1
     - dash-iconify==0.1.2
