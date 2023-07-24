@@ -267,7 +267,7 @@ footer_analysis = dmc.Container(
                                 },
                             ),
                             # TODO: add home address
-                            href="http://127.0.0.1:8050/"
+                            href="/"
                         )
                     ]
                 ),
@@ -494,7 +494,7 @@ footer_generation = dmc.Container(
                                 },
                             ),
                             # TODO: add home address
-                            href="http://127.0.0.1:8050/"
+                            href="/"
                         )
                     ]
                 ),
@@ -527,8 +527,8 @@ menu = html.Div(
                 dmc.MenuTarget(dmc.Burger(id="burger-button", opened=False)),
                 dmc.MenuDropdown(
                     [
-                        dmc.MenuItem("Home", id="button-1", n_clicks=0, href="http://127.0.0.1:8050/"),
-                        dmc.MenuItem("About", id="button-2", n_clicks=0, href="http://127.0.0.1:8050/"),
+                        dmc.MenuItem("Home", id="button-1", n_clicks=0, href="/"),
+                        dmc.MenuItem("About", id="button-2", n_clicks=0, href="/"),
                         dmc.MenuItem(
                             "Project Repository",
                             href="https://github.com/vsisl/dash-chatgpt-challenge/",
