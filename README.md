@@ -1,5 +1,5 @@
 # PropagandaBot
-A web app based on the plotly-dash framework developed to participate the [Dash-ChatGPT App Challenge](https://community.plotly.com/t/dash-chatgpt-app-challenge/75763)
+A web app based on the plotly-dash framework developed to participate the [Dash-ChatGPT App Challenge](https://community.plotly.com/t/dash-chatgpt-app-challenge/75763).
 
 The app uses ChatGPT API to discover propaganda techniques in a provided text. It can also generate propaganda articles for given topics.
 
@@ -7,22 +7,48 @@ The app uses ChatGPT API to discover propaganda techniques in a provided text. I
 
 ![img.gif](demo.gif)
 
+   
+## Authors
+- [Jan Bureš](https://www.linkedin.com/in/jan-bure%C5%A1-6b2283216/)
+- [Christian Horvath](https://linkedin.com/in/christian-horvat-466048214)
+- [Václav Šísl](https://linkedin.com/in/vaclav-sisl)
+
 ## How to run the app
 
-### With Docker 
+### Step 1: Clone the repository
 
-#### Development environment
+```bash
+$ git clone https://github.com/vsisl/dash-chatgpt-challenge
+$ cd dash-chatgpt-challenge
+```
+
+### Step 2: Add openAI API key
+Go to [platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys), and crate an API key.
+
+Create a file `openaai_api_key.txt` in the project root folder and add the secret key to it.
+
+```bash
+$ echo your_secrete_key > openai_api_key.txt  
+```
+
+### Step 3: Run the app
+
+#### Option 1: Using Docker (recommended) 
+
+##### Development environment
+
 ```bash
 $ docker compose -f docker-compose.dev.yml up
 ```
 
 
-#### Production environment
+##### Production environment
+
 ```bash
 $ docker compose -f docker-compose.yml up
 ```
 
-### Without Docker
+#### Option 2: Without Docker
 
 1) Create conda virtual environment:
 
