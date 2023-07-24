@@ -1,5 +1,11 @@
-# dash-chatgpt-challenge
+# PropagandaBot
 A web app based on the plotly-dash framework developed to participate the [Dash-ChatGPT App Challenge](https://community.plotly.com/t/dash-chatgpt-app-challenge/75763)
+
+The app uses ChatGPT API to discover propaganda techniques in a provided text. It can also generate propaganda articles for given topics.
+
+## Demo
+
+![img.gif](demo.gif)
 
 ## How to run the app
 
