@@ -19,8 +19,8 @@ USER docker
 # --- Create a new directory and set as working directory
 WORKDIR /home/docker/dash-chatgpt-challenge
 
-# --- Copy all content of the repo to the working directory
-COPY . .
+# --- Copy environment definition file
+COPY environment.yml environment.yml
 
 # --- Create conda environment
 RUN conda env create -f environment.yml
@@ -29,7 +29,13 @@ RUN conda env create -f environment.yml
 RUN echo "source activate dash_chatgpt" > ~/.bashrc
 ENV PATH /home/docker/.conda/envs/dash_chatgpt/bin:$PATH
 
+# --- Copy all content of the repo to the working directory
+COPY . .
+
 # --- Run production server (Gunicorn)
 #  --log-level options: debug, info (default), warning, error, critical
 #  --timeout [seconds]
-CMD ["gunicorn", "dash_app.wsgi:application", "--bind=0.0.0.0:80", "--workers=3", "--timeout=300",  "--log-level=info"]
+CMD ["gunicorn", "dash_app.wsgi:application", "--bind=0.0.0.0:8000", "--workers=3", "--timeout=300",  "--log-level=info"]
+
+# --- or run flask dev server
+# CMD ["python", "-m", "dash_app.app"]

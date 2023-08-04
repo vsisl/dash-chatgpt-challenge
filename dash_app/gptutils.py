@@ -1,12 +1,13 @@
 """
 Functions making openAI API calls.
 """
+import os
 import ast
 import json
 import openai  # chat-gpt API
 from dash_app.flask_cache import cache
 
-openai.api_key = open("openai_api_key.txt", "r").read().strip("\n")
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 @cache.memoize(timeout=7 * 24 * 3600)

@@ -9,7 +9,7 @@
 # NOTE: It is possible to omit the build command and proceed with $ docker compose up. The image will be built
 #  automatically, however this doesn't allow for specifying the --no-cache flag.
 
-version: '3.4'
+version: '3.8'
 
 networks:
   dash_chatgpt-network:
@@ -18,15 +18,15 @@ services:
   # database serving as cache for callbacks and broker for async. processes
   redis:
     container_name: dash_chatgpt_challenge-redis
-    image: redis
+    image: docker.io/redis:latest
     networks:
       - dash_chatgpt-network
     restart: unless-stopped
 
   # worker for async. processes
   celery_worker:
-    container_name: dash_chatgpt_challenge-celery_worker
-    image: vsisl/dash_chatgpt_challenge-celery_worker:latest
+    container_name: propaganda_bot-celery_worker
+    image: docker.io/vsisl/propaganda_bot-celery_worker:latest
     build:
       context: .
       dockerfile: celery_app/Dockerfile
@@ -35,6 +35,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1                  # in order to get python prints into the container's log file
       - REDISTOGO_URL=redis://redis:6379    # to connect with redis
+      - OPENAI_API_KEY=${OPENAI_API_KEY}    # add your api key here
     depends_on:
       - redis
     logging:
@@ -46,18 +47,19 @@ services:
 
   # plotly dash app
   dash_app:
-    container_name: dash_chatgpt_challenge-dash_app
-    image: vsisl/dash_chatgpt_challenge-dash_app:latest
+    container_name: propaganda_bot-dash_app
+    image: docker.io/vsisl/propaganda_bot-dash_app:latest
     build:
       context: .
       dockerfile: dash_app/Dockerfile
     networks:
       - dash_chatgpt-network
     ports:
-      - 5000:80                         # specify the port for the Dashboard
+      - "8000:8000"                         # specify the port for the webapp; host port:container port
     environment:
       - PYTHONUNBUFFERED=1                  # in order to get python prints into the container's log file
       - REDISTOGO_URL=redis://redis:6379    # to connect with redis
+      - OPENAI_API_KEY=${OPENAI_API_KEY}    # add your api key here
     depends_on:
       - redis
       - celery_worker

@@ -23,12 +23,12 @@ $ cd dash-chatgpt-challenge
 ```
 
 ### Step 2: Add openAI API key
-Go to [platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys), and crate an API key.
+Go to [platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys), and crate an API key (`your_secrete_key`).
 
-Create a file `openaai_api_key.txt` in the project root folder and add the secret key to it.
+Create a file `.env` in the project root folder and add the secret key to it.
 
 ```bash
-$ echo your_secrete_key > openai_api_key.txt  
+$ echo OPENAI_API_KEY=your_secrete_key > .env
 ```
 
 ### Step 3: Run the app
