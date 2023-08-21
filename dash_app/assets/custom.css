@@ -69,7 +69,7 @@
 
 /* custom loading - .gif with putin located in /assets */
 .dash-spinner {
-  background-image: url('putin-loader.gif');
+  background-image: url('new-loader.gif');
   background-size: contain;
   background-repeat: no-repeat;
   height: 40vh !important;
