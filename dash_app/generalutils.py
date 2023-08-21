@@ -400,9 +400,14 @@ def render(input_dictionary, ranking=None):
                 ]
 
                 labels = values["classes"]
-                children.append(
-                    entity(children=values["sentence"], techniques=labels, idx=int(idx))
-                )
+                # if no techniques remain (all had low confidence score) render the sentence as is without any styling
+                if not labels:
+                    children.append(values["sentence"] + " ")
+                # if there are still some techniques remaining apply correct styling
+                else:
+                    children.append(
+                        entity(children=values["sentence"], techniques=labels, idx=int(idx))
+                    )
         # if sentence contains propaganda techniques, apply special styling and add labels
         else:
             labels = values["classes"]
