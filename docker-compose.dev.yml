@@ -1,30 +1,32 @@
 # --- Development docker compose file
 
-version: '3.4'
+version: '3.8'
 
 networks:
-  dash_chatgpt-dev-network:
+  dash_chatgpt-network-dev:
 
 services:
+  # database serving as cache for callbacks and broker for async. processes
   redis:
-    container_name: dash_chatgpt_challenge-dev-redis
-    image: redis
+    container_name: dash_chatgpt_challenge-redis-dev
+    image: docker.io/redis:latest
     networks:
-      - dash_chatgpt-dev-network
+      - dash_chatgpt-network-dev
     restart: unless-stopped
 
   # worker for async. processes
   celery_worker:
-    container_name: dash_chatgpt_challenge-dev-celery_worker
-    image: vsisl/dash_chatgpt_challenge-celery_worker:dev
+    container_name: propaganda_bot-celery_worker-dev
+    image: docker.io/vsisl/propaganda_bot-celery_worker:latest
     build:
       context: .
       dockerfile: celery_app/Dockerfile
     networks:
-      - dash_chatgpt-network
+      - dash_chatgpt-network-dev
     environment:
       - PYTHONUNBUFFERED=1                  # in order to get python prints into the container's log file
       - REDISTOGO_URL=redis://redis:6379    # to connect with redis
+      - OPENAI_API_KEY=${OPENAI_API_KEY}    # add your api key here
     depends_on:
       - redis
     logging:
@@ -36,21 +38,24 @@ services:
     volumes:
       - ../dash-chatgpt-challenge:/home/docker/dash-chatgpt-challenge
 
+  # plotly dash app
   dash_app:
-    container_name: dash_chatgpt_challenge-dev-dash_app
-    image: vsisl/dash_chatgpt_challenge:dev
+    container_name: propaganda_bot-dash_app-dev
+    image: docker.io/vsisl/propaganda_bot-dash_app:latest
     build:
       context: .
       dockerfile: dash_app/Dockerfile
     networks:
-      - dash_chatgpt-dev-network
+      - dash_chatgpt-network-dev
     ports:
-      - 5001:80
+      - "8000:8000"                         # specify the port for the webapp; host port:container port
     environment:
-      - PYTHONUNBUFFERED=1
-      - REDISTOGO_URL=redis://redis:6379
+      - PYTHONUNBUFFERED=1                  # in order to get python prints into the container's log file
+      - REDISTOGO_URL=redis://redis:6379    # to connect with redis
+      - OPENAI_API_KEY=${OPENAI_API_KEY}    # add your api key here
     depends_on:
       - redis
+      - celery_worker
     logging:
       driver: json-file
       options:
