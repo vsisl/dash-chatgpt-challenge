@@ -361,13 +361,44 @@ def render(input_dictionary, ranking=None):
     for idx, values in input_dictionary.items():
         # if sentence does not contain any propaganda techniques, simply render it as is
         if values["classes"] is None or values["classes"] == []:
-            children.append(values["sentence"] + ' ')
+            children.append(values["sentence"] + " ")
         elif ranking is not None:
+            # get the last five elements from the ranking
             last_five_elements = ranking[-5:]
+            # check if the current index is in the last five elements
             is_in_last_five = np.isin(int(idx), last_five_elements)
             if not is_in_last_five:
-                children.append(values["sentence"] + ' ')
+                children.append(values["sentence"] + " ")
             else:
+                # create a list to store indices of low confidence values
+                indices_to_remove = []
+
+                # loop through each technique and check its confidence
+                for i in range(len(values["classes"])):
+                    if values["confidence"][i] <= 0.6:
+                        indices_to_remove.append(i)
+
+                # remove low confidence values from the confidence, classes, and explanation - this way we still take
+                #  top five sentences with the highest confidence scores, but we filter out any low confidence values
+                #  possibly accompanying the certain one; e.g. confidence score [1, 0.5] is considered to be high as
+                #  it contains 1 in the list, hence it could potentially appear in the top of the ranking => we have to
+                #  ensure that 0.5 (low confidence) is removed
+                values["confidence"] = [
+                    item
+                    for index, item in enumerate(values["confidence"])
+                    if index not in indices_to_remove
+                ]
+                values["classes"] = [
+                    item
+                    for index, item in enumerate(values["classes"])
+                    if index not in indices_to_remove
+                ]
+                values["explain"] = [
+                    item
+                    for index, item in enumerate(values["explain"])
+                    if index not in indices_to_remove
+                ]
+
                 labels = values["classes"]
                 children.append(
                     entity(children=values["sentence"], techniques=labels, idx=int(idx))
