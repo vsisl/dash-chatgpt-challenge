@@ -597,7 +597,7 @@ authors = dmc.Container(
                                 dmc.Group(
                                     [
                                         # dmc.Avatar("VS", color="cyan", radius="xl"),
-                                        html.P("Christian Horvath", style={"font-weight": "bold"}),
+                                        html.P("Christian Horvat", style={"font-weight": "bold"}),
                                         dmc.Anchor(
                                             DashIconify(icon="bi:linkedin", color="gray", width=20),
                                             href="https://ch.linkedin.com/in/christian-horvat-466048214",
