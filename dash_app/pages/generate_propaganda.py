@@ -127,17 +127,17 @@ def process_text(n_clicks, input_text):
             text_prompt = name + "_prompt.npy"
             ranking_name = name + "_ranking.npy"
             np.save(
-                "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+                "data/example_generate_presentation/"
                 + text_name,
                 classified_sentences,
             )
             np.save(
-                "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+                "data/example_generate_presentation/"
                 + text_prompt,
                 input_text,
             )
             np.save(
-                "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+                "/data/example_generate_presentation/"
                 + ranking_name,
                 ranking,
             )
