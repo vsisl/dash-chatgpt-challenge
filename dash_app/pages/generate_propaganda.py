@@ -79,29 +79,71 @@ def process_text(n_clicks, input_text):
     - bool: Whether the footer should be fixed.
     - dict: Data for the "hidden-comp" component to use in the following callback
     """
+    # this boolean determines if a prepared text is to be used even for the generative part - it is supposed that during
+    #  the Plotly webinar one wants to have certainty over the outcome
+    presentation = False
+    # this boolean determines if the generated text is to be saved as .npy file to example_articles_presentation/
+    save_text = False
 
-    # Construct the prompt by embedding the input text within triple backticks and
-    # providing additional instructions to be used for generating completions.
-    prompt = f"""
-        Write the text delimited by triple backticks \
-        in form of a really short russian propaganda breaking news. \
-        Write the text in English.
-        ```{input_text}```
-        """
+    if presentation:
+        # name of the text which should be loaded
+        text_name_to_load = "climate"
+        classified_sentences = np.load(
+            "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+            + text_name_to_load + ".npy",
+            allow_pickle=True).item()
+        ranking = np.load(
+            "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+            + text_name_to_load + "_ranking.npy",
+            allow_pickle=True)
+        # sleep for some seconds to display the loader - we do not want to be suspicious, it should take some time to
+        #  generate an article
+        time.sleep(7)
+    else:
+        # Construct the prompt by embedding the input text within triple backticks and
+        # providing additional instructions to be used for generating completions.
+        prompt = f"""
+            Write the text delimited by triple backticks \
+            in form of a really short russian propaganda breaking news. \
+            Write the text in English.
+            ```{input_text}```
+            """
 
-    # Use the constructed prompt to get a generated completion text
-    # along with the number of tokens used in the completion.
-    output_text, output_tokens = get_completion(prompt)
+        # Use the constructed prompt to get a generated completion text
+        # along with the number of tokens used in the completion.
+        output_text, output_tokens = get_completion(prompt)
 
-    # Extract individual sentences from the generated completion text.
-    sentences = extract_sentences(output_text)
+        # Extract individual sentences from the generated completion text.
+        sentences = extract_sentences(output_text)
 
-    # Classify the extracted sentences and obtain their ranking
-    # and the number of tokens in each classified sentence.
-    classified_sentences, ranking, n_tokens = classify_sentences(sentences)
+        # Classify the extracted sentences and obtain their ranking
+        # and the number of tokens in each classified sentence.
+        classified_sentences, ranking, n_tokens = classify_sentences(sentences)
 
-    # Update the total token count by adding the tokens from the output completion.
-    n_tokens += output_tokens
+        if save_text:
+            # the name of the text under which it will be saved
+            name = "plotly"
+            text_name = name + ".npy"
+            text_prompt = name + "_prompt.npy"
+            ranking_name = name + "_ranking.npy"
+            np.save(
+                "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+                + text_name,
+                classified_sentences,
+            )
+            np.save(
+                "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+                + text_prompt,
+                input_text,
+            )
+            np.save(
+                "/home/jan/PycharmProjects/dash-chatgpt-challenge/data/example_generate_presentation/"
+                + ranking_name,
+                ranking,
+            )
+
+        # Update the total token count by adding the tokens from the output completion.
+        n_tokens += output_tokens
 
     # Render the classified sentences for display, using the obtained ranking.
     output_children = render(classified_sentences, ranking=ranking)
