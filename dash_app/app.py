@@ -91,7 +91,7 @@ navbar = dbc.Navbar(
 
 background_callback_manager = CeleryManager(celery_app)
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], background_callback_manager=background_callback_manager)
-app.title = "Amazing Dash app"
+app.title = "PropagandaBot"
 
 # main app layout
 app.layout = dbc.Container(
