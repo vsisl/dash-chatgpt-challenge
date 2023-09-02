@@ -3,6 +3,8 @@ A web app based on the plotly-dash framework developed to participate the [Dash-
 
 The app uses ChatGPT API to discover propaganda techniques in a provided text. It can also generate propaganda articles for given topics.
 
+The app is available online at [propagandabot.online:8000](http://www.propagandabot.online:8000/).
+
 ## Demo
 
 ![img.gif](demo.gif)
@@ -10,7 +12,7 @@ The app uses ChatGPT API to discover propaganda techniques in a provided text. I
    
 ## Authors
 - [Jan Bureš](https://www.linkedin.com/in/jan-bure%C5%A1-6b2283216/)
-- [Christian Horvath](https://linkedin.com/in/christian-horvat-466048214)
+- [Christian Horvat](https://linkedin.com/in/christian-horvat-466048214)
 - [Václav Šísl](https://linkedin.com/in/vaclav-sisl)
 
 ## How to run the app
