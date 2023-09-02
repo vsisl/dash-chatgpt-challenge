@@ -64,3 +64,4 @@ services:
     restart: unless-stopped
     volumes:
       - ../dash-chatgpt-challenge:/home/docker/dash-chatgpt-challenge
+    command: ["python", "-m", "dash_app.app"]       # overriding the default command in the container (to run flask server instead of gunicorn)
