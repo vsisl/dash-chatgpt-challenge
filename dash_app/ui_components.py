@@ -248,25 +248,24 @@ hidden_comp = dcc.Store(id="hidden-comp")
 footer_analysis = dmc.Container(
     children=[
         dmc.Footer(
-        id="footer",
-        height=110,
-        fixed=True,
-        withBorder=False,
-        children=[
+            id="footer",
+            height=110,
+            fixed=True,
+            withBorder=False,
+            children=[
                 dmc.Center(
                     children=[
                         dmc.Anchor(
                             html.H4(
                                 "PropagandaBot",
                                 style={
-                                    "font-family": "Propaganda",  # custom free font, located in /assets
+                                    # "font-family": "Propaganda",  # custom free font, located in /assets
                                     "background": "#858585",
                                     # "background": "#2e2d2d",
                                     "-webkit-background-clip": "text",
                                     "-webkit-text-fill-color": "transparent",
                                 },
                             ),
-                            # TODO: add home address
                             href="/"
                         )
                     ]
@@ -475,25 +474,24 @@ hidden_comp_generation = dcc.Store(id="hidden-comp-generation")
 footer_generation = dmc.Container(
     children=[
         dmc.Footer(
-        id="footer-generation",
-        height=110,
-        fixed=True,
-        withBorder=False,
-        children=[
+            id="footer-generation",
+            height=110,
+            fixed=True,
+            withBorder=False,
+            children=[
                 dmc.Center(
                     children=[
                         dmc.Anchor(
                             html.H4(
                                 "PropagandaBot",
                                 style={
-                                    "font-family": "Propaganda",  # custom free font, located in /assets
+                                    # "font-family": "Propaganda",  # custom free font, located in /assets
                                     "background": "#858585",
                                     # "background": "#2e2d2d",
                                     "-webkit-background-clip": "text",
                                     "-webkit-text-fill-color": "transparent",
                                 },
                             ),
-                            # TODO: add home address
                             href="/"
                         )
                     ]
