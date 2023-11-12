@@ -286,7 +286,6 @@ footer_analysis = dmc.Container(
                         dmc.Space(w=25),
                         dmc.Anchor(
                             dmc.Text("Reason", color="gray"),
-                            # DashIconify(icon="bi:linkedin", color="gray", width=20),
                             href="/reason",
                         ),
                     ]
@@ -514,6 +513,11 @@ footer_generation = dmc.Container(
                             dmc.Text("Authors", color="gray"),
                             # DashIconify(icon="bi:linkedin", color="gray", width=20),
                             href="/authors",
+                        ),
+                        dmc.Space(w=25),
+                        dmc.Anchor(
+                            dmc.Text("Reason", color="gray"),
+                            href="/reason",
                         ),
                     ]
                 ),
