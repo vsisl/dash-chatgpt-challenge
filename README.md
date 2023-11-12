@@ -3,7 +3,7 @@ A web app based on the plotly-dash framework developed to participate the [Dash-
 
 The app uses ChatGPT API to discover propaganda techniques in a provided text. It can also generate propaganda articles for given topics.
 
-The app is available online at [propagandabot.online:8000](http://www.propagandabot.online:8000/).
+The app is available online at [propagandabot.online](http://www.propagandabot.online/).
 
 ## Demo
 
