@@ -596,7 +596,8 @@ authors = dmc.Container(
                             style={"width": 350},
                         )
                     ],
-                    span=4
+                    lg=4,
+                    xs=12,
                 ),
                 dmc.Col(
                     children=[
@@ -622,7 +623,8 @@ authors = dmc.Container(
                             style={"width": 350},
                         )
                     ],
-                    span=4
+                    lg=4,
+                    xs=12,
                 ),
                 dmc.Col(
                     children=[
@@ -648,7 +650,8 @@ authors = dmc.Container(
                             style={"width": 350},
                         )
                     ],
-                    span=4
+                    lg=4,
+                    xs=12,
                 ),
             ]
         ),
